@@ -1,0 +1,23 @@
+###################################
+# Syntax Coloring Map for library #
+###################################
+
+################################
+# Classes/Datatypes (KEYWORD1) #
+################################
+smoothLED KEYWORD1
+
+####################################
+# Methods and Functions (KEYWORD2) #
+####################################
+begin	KEYWORD2
+hertz	KEYWORD2
+set	KEYWORD2
+
+########################
+# Constants (LITERAL1) #
+########################
+INVERT_LED	LITERAL1
+NO_INVERT_LED	LITERAL1
+MAX10BIT	LITERAL1
+kcie	LITERAL1
