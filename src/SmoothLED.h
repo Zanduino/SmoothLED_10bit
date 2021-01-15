@@ -68,9 +68,9 @@ Written by Arnd <Arnd@Zanduino.Com> at https://www.github.com/SV-Zanshin
 /***************************************************************************************************
 ** Define all constants that are to be globally visible                                           **
 ***************************************************************************************************/
-const bool             INVERT_LED{true};      //!< A Value of 0 denotes 100% duty cycle when set
-const bool             NO_INVERT_LED{false};  //!< Default. When value is 0 it means off
-const uint16_t         MAX10BIT{0x3FF};       //!< 1023 decimal - biggest value for 10 bits
+const bool     INVERT_LED{true};      //!< A Value of 0 denotes 100% duty cycle when set
+const bool     NO_INVERT_LED{false};  //!< Default. When value is 0 it means off
+const uint16_t MAX10BIT{0x3FF};       //!< 1023 decimal - biggest value for 10 bits
 /*! @brief   Linear PWM brightness progression table using CIE brightness levels
     @details A linear progression of PWM values of 0 through to 1023 (from "off" to 100%
              "on") does not correspond to a linear increase in percieved brightness to the
