@@ -13,13 +13,13 @@ smoothLED *smoothLED::_firstLink{nullptr};  // static member declaration outside
 ** Not all of these macros are defined on all platforms, so redefine them here just in case       **
 ***************************************************************************************************/
 #ifndef _BV
-#define _BV(bit) (1 << (bit)) //!< bit shift macro
+#define _BV(bit) (1 << (bit))  //!< bit shift macro
 #endif
 #ifndef cbi
-#define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit)) //!< clear bit macro
+#define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))  //!< clear bit macro
 #endif
 #ifndef sbi
-#define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit)) //!<  set bit macro
+#define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))  //!<  set bit macro
 #endif
 
 #if defined(OCR1AL)
@@ -61,10 +61,10 @@ smoothLED::~smoothLED() {
            link in the list of instances.  When destroying the last surviving instance we disable
            any interrupt that has been set
   */
-  if (this == _firstLink) {         // remove interrupts if this is the only instance
-    cli();                          // Disable interrupts while changing values
+  if (this == _firstLink) {  // remove interrupts if this is the only instance
+    cli();                   // Disable interrupts while changing values
 #if defined(OCR1AL)
-    TIMSK1 &= ~_BV(OCIE1A);         // turn off interrupt on Match A
+    TIMSK1 &= ~_BV(OCIE1A);  // turn off interrupt on Match A
 #endif
     sei();                          // Re-enable interrupts after changing values
   } else {                          // otherwise
@@ -173,7 +173,7 @@ bool smoothLED::begin(const uint8_t pin, const bool invert) {
    ** globally then any TIMER{n} setup information gets lost, so just overwrite the values during **
    ** the begin() call. Since the calls are fast, don't bother checking and just overwrite them   **
    ************************************************************************************************/
-  cli();                  // Disable interrupts while changing values
+  cli();  // Disable interrupts while changing values
 #if defined(OCR1AL)
   TCCR1B = 0;             // Clear Timer 1 Control Register B
   sbi(TCCR1B, CS10);      // Set 3 "Clock Select" bits to no pre-scaling
@@ -188,7 +188,7 @@ bool smoothLED::begin(const uint8_t pin, const bool invert) {
 #error TIMER not yet defined for this micrprocessor
 #endif
 
-  sei();                  // Re-enable interrupts after changing values
+  sei();      // Re-enable interrupts after changing values
   hertz(40);  // Start off with 40Hz
 }  // of function "begin()"
 void smoothLED::hertz(const uint8_t hertz) const {

@@ -6,13 +6,11 @@
 
 #include "SmoothLED.h"
 
-
 //  smoothLED     BOARD, Y1, Y2, RED, GREEN, BLUE;
 smoothLED     RED, GREEN, BLUE;
-const uint8_t RED_PIN{ 11 };
-const uint8_t GREEN_PIN{ 10 };
-const uint8_t BLUE_PIN{ 9 };
-
+const uint8_t RED_PIN{11};
+const uint8_t GREEN_PIN{10};
+const uint8_t BLUE_PIN{9};
 
 void setup() {
   Serial.begin(115200);
@@ -53,8 +51,6 @@ void setup() {
     Serial.println(F("OK"));
   else
     Serial.println(F("ERROR!"));
-
-
 
   RED.hertz(60);
   RED.set(500);

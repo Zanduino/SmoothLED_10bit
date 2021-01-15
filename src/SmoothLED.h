@@ -1,16 +1,16 @@
 /*! @file Smooth_LED.h
 
 @mainpage Arduino Library Header to use 10-bit PWM on any pin
- 
+
 @section Smooth_LED_intro_section Description
 
-Hardware PWM on the Atmel ATMega microprocessors can only be done on certain pins, and these are 
+Hardware PWM on the Atmel ATMega microprocessors can only be done on certain pins, and these are
 attached to specific timers and these, in turn, are either 8-bit or 16-bit. The 8-bit timers limit
 hardware PWM to a resolution of 8-bits, which causes visible flickering when changing PWM values for
 certain brightness levels (mainly in the lower end).
 
-This library is written to allow 10-bit resolution on all pins, even those not associated with a 
-timer for PWM. It accomplishes this by performing the PWM in software using a high-speed interrupt, 
+This library is written to allow 10-bit resolution on all pins, even those not associated with a
+timer for PWM. It accomplishes this by performing the PWM in software using a high-speed interrupt,
 using the first 16-bit timer on the Atmel ATMega processor it is compiled on.
 
 Since the PWM is done in software, it "steals" CPU cycles from the main sketch and the more LEDs
@@ -175,7 +175,7 @@ class smoothLED {
   uint16_t          _targetLevel{0};         //!< Contains the target PWM level
   uint8_t           _changeSpeed{0};         //!< Contains the transition speed
   uint8_t           _changeTicker{0};        //!< Used in counting ticks for change speed
-  volatile uint8_t*          _portRegister{nullptr};  //!< Ptr to the actual PORT{n} Register
+  volatile uint8_t* _portRegister{nullptr};  //!< Ptr to the actual PORT{n} Register
   uint8_t           _bitMaskRegister{0};     //!< bit mask for the bit used in PORT{n}
   bool              _inverted{false};        //!< False = PWM0 is "off"
 };                                           // of class smoothLED
