@@ -1,4 +1,4 @@
-/*! @file Smooth_LED.h
+/*! @file SmoothLED.h
 
 @mainpage Arduino Library Header to use 10-bit PWM on any pin
 
