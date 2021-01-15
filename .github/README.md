@@ -18,3 +18,4 @@ Along the same lines, while the library supports defining as many LEDs as there 
 The documentation has been done using Doxygen and can be found at [doxygen documentation](https://Zanduino.github.io/SmoothLED/html/index.html)
 
 [![Zanshin Logo](https://zanduino.github.io/Images/zanshinkanjitiny.gif) <img src="https://zanduino.github.io/Images/zanshintext.gif" width="75"/>](https://zanduino.github.io)
+<img src="https://github.com/Zanduino/INA/blob/master/images/horizontal_narrow.png" alt="INA" align="left" height="50px">
