@@ -71,14 +71,14 @@ Written by Arnd <Arnd@Zanduino.Com> at https://www.github.com/SV-Zanshin
 const bool             INVERT_LED{true};      //!< A Value of 0 denotes 100% duty cycle when set
 const bool             NO_INVERT_LED{false};  //!< Default. When value is 0 it means off
 const uint16_t         MAX10BIT{0x3FF};       //!< 1023 decimal - biggest value for 10 bits
+/*! @brief   Linear PWM brightness progression table using CIE brightness levels
+    @details A linear progression of PWM values of 0 through to 1023 (from "off" to 100%
+             "on") does not correspond to a linear increase in percieved brightness to the
+             human eye. In order to make this look linear, the CIE 1931 color space and
+             lightness formula is used. The kcie table was generated using a program written
+             by Jared Sanson and explained on https://jared.geek.nz/2013/feb/linear-led-pwm;
+             this table is 1023 X 16-bits and that is a big chunk of Atmel memory */
 const PROGMEM uint16_t kcie[] = {
-    /*! @brief   Linear PWM brightness progression table using CIE brightness levels
-        @details A linear progression of PWM values of 0 through to 1023 (from "off" to 100%
-                 "on") does not correspond to a linear increase in percieved brightness to the
-                 human eye. In order to make this look linear, the CIE 1931 color space and
-                 lightness formula is used. The kcie table was generated using a program written
-                 by Jared Sanson and explained on https://jared.geek.nz/2013/feb/linear-led-pwm;
-                 this table is 1023 X 16-bits and that is a big chunk of Atmel memory */
     0,    0,    0,    0,   0,   1,   1,   1,   1,   1,   1,   1,    1,    1,    2,    2,    2,
     2,    2,    2,    2,   2,   2,   3,   3,   3,   3,   3,   3,    3,    3,    3,    4,    4,
     4,    4,    4,    4,   4,   4,   4,   5,   5,   5,   5,   5,    5,    5,    5,    5,    6,
