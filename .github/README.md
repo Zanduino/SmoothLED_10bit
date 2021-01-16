@@ -1,5 +1,5 @@
 [![License: GPL v3](https://zanduino.github.io/Badges/GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![Build](https://github.com/Zanduino/SmoothLED/workflows/Build/badge.svg)](https://github.com/Zanduino/SmoothLED/actions?query=workflow%3ABuild) [![Format](https://github.com/Zanduino/SmoothLED/workflows/Format/badge.svg)](https://github.com/Zanduino/SmoothLED/actions?query=workflow%3AFormat) [![Wiki](https://zanduino.github.io/Badges/Documentation-Badge.svg)](https://github.com/Zanduino/SmoothLED/wiki) [![Doxygen](https://github.com/Zanduino/SmoothLED/workflows/Doxygen/badge.svg)](https://Zanduino.github.io/SmoothLED/html/index.html) [![arduino-library-badge](https://www.ardu-badge.com/badge/SmoothLED.svg?)](https://www.ardu-badge.com/SmoothLED)
-# Smooth 10-bit LED control library<br>
+# WORK-IN-PROGRESS - Smooth 10-bit LED control library<br>
 
 _Arduino_ library that allows one or more pins on any Arduino to be used as 10-bit PWM for LEDs. [at the INA wiki pages]
 
