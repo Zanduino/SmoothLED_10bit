@@ -73,9 +73,9 @@ void loop() {
   //    BOARD.set(1023, 128);
   //    Y1.set(1023, 128);
   //    Y2.set(1023, 128);
-  RED.set(1023, 128);
-  GREEN.set(1023, 128);
-  BLUE.set(1023, 128);
-  delay(5000);
+  RED.set(1023, 255);
+  GREEN.set(1023, 255);
+  BLUE.set(1023, 255);
+  delay(10000);
   Serial.println(F("Next..."));
 }
