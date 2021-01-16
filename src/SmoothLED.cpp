@@ -278,7 +278,7 @@ void smoothLED::pwmISR() {
              to minimize time spent here.
              This function iterates through all the instances of the smoothLED class and sets each
              pin ON or OFF for the appropriate number of cycles.
-*/
+  */
   static uint16_t counter{0};             // loop 0-1023 for software PWM, incrementing on each call
   smoothLED *     p = _firstLink;         // set ptr to start of linked list of class instances
   while (p != nullptr) {                  // loop through all class instances
@@ -301,12 +301,12 @@ void smoothLED::faderISR() {
     @brief   Performs fading PWM functions
     @details While the "pwmISR()" needs to be called very frequently in order to perform PWM on the
              pins, the actual fading effect doesn't need to be called that often. Hence this
-             function is attached to the TIMER0_COMPA_vect and TIMER0_COMPB_vect and triggered by 
+             function is attached to the TIMER0_COMPA_vect and TIMER0_COMPB_vect and triggered by
              those. The TIMER0 is used by the Arduino for timing (millis() and micros() functions),
              and it is set to overflow roughly every millisecond. By adding these COMPA and COMPB
              triggers, we get a rate of about 500ms for this function, which is enough for a full
              fade from 0 to 1023 to take half a second at top speed.
-*/
+  */
   smoothLED *p = _firstLink;                    // set ptr to first link for loop
   bool       noPWM{true};                       // Turned off if any pin uses PWM
   while (p != nullptr) {                        // loop through all class instances
@@ -353,8 +353,8 @@ void smoothLED::faderISR() {
 void smoothLED::setInterrupts(const bool status) {
   /*!
   @brief   Turns smoothLED interrupts ON or OFF
-  @details The class uses 3 interrupts. The main interrupt is OCIE1A on TIMER1 which triggers 1023 
-           times the "Hertz()" rate which leaves very little CPU cycles left over for the actual 
+  @details The class uses 3 interrupts. The main interrupt is OCIE1A on TIMER1 which triggers 1023
+           times the "Hertz()" rate which leaves very little CPU cycles left over for the actual
            sketch. This interrupt is only used for PWM values that aren't full ON or OFF; so if all
            of the pins are set to either ON or OFF and are not actively fading, the we can turn off
            this interrupt in order to give the poor little Atmel microprocessor some much needed CPU

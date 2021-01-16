@@ -59,12 +59,6 @@ Written by Arnd <Arnd@Zanduino.Com> at https://www.github.com/SV-Zanshin
 #ifndef _smoothLED_h
 #define _smoothLED_h
 
-#if defined(ARDUINO) && ARDUINO >= 100
-#include "arduino.h"
-#else
-#include "WProgram.h"
-#endif
-
 /***************************************************************************************************
 ** Define all constants that are to be globally visible                                           **
 ***************************************************************************************************/
