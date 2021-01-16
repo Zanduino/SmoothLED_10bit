@@ -31,4 +31,4 @@ jobs:
        - name: 'Install Arduino CLI package'
          run: bash ${GITHUB_WORKSPACE}/Common/Scripts/install_arduino_cli.sh
        - name: 'Run master compile python program'
-         run: python3 ${GITHUB_WORKSPACE}/Common/Python/build_platform.py uno leonardo mega2560 zero esp32 protrinket_5v flora feather32u4
+         run: python3 ${GITHUB_WORKSPACE}/Common/Python/build_platform.py uno leonardo mega2560  protrinket_5v flora feather32u4
