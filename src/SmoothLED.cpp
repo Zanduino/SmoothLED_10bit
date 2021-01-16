@@ -7,10 +7,12 @@ See main library header file for details
 
 #include "SmoothLED.h"
 
-const uint8_t FLAG_INVERTED{1};  //!< Bit mask for inverted LED flag
-const uint8_t FLAG_PWM{2};       //!< Bit mask for LED is not 0 or 1023
+const uint16_t MAX10BIT{0x3FF};   //!< 1023 decimal - biggest value for 10 bits
+const uint8_t  FLAG_INVERTED{1};  //!< Bit mask for inverted LED flag
+const uint8_t  FLAG_PWM{2};       //!< Bit mask for LED is not 0 or 1023
 
 smoothLED *smoothLED::_firstLink{nullptr};  // static member declaration outside of class for init
+uint16_t   smoothLED::counterPWM{0};  // loop 0-1023 for software PWM, incrementing on each call
 
 /***************************************************************************************************
 ** Not all of these macros are defined on all platforms, so redefine them here just in case       **
@@ -218,138 +220,6 @@ void smoothLED::pinOff() const {
     *_portRegister &= ~_registerBitMask;
   }  // if-then-else _inverted
 }
-void smoothLED::hertz(const uint8_t hertz) const {
-  /*!
-@brief     Set the PWM frequency
-@details   The function sets the PWM frequency. The actual interrupt rate is 1023 times the Hertz
-           value specified, that is accounted for in the formula.  While rate down to 1Hz can be
-           given, anything below 30 (depending on the LED and brightness) causes visible flickering
-           and should be avoided. Any number beyond XXXX is ignored, as the interrupt rate would be
-           so high that there are no CPU cycles left to process the main program.
-@param[in] hertz    Unsigned integer Hertz setting for LED PWM
-*/
-#if defined(OCR1AL)
-  OCR1A = static_cast<uint16_t>(
-      (F_CPU / static_cast<unsigned long>(1023) / static_cast<unsigned long>(hertz)) - 1);
-#endif
-}  // of function "hertz()"
-void smoothLED::set(const uint16_t &val, const uint8_t &speed) {
-  /*!
-  @brief     sets the LED
-  @details   This function does not actually set the LED, it just writes the corresponding parameter
-             values to the instance variables. The setting of the pin state is done in the
-             "pwmISR()" function which is called by the interrupt triggered byt the timer.
-  @param[in] val    The value 0-1023 to set the LED. Defaults to 0 (OFF)
-  @param[in] speed  The rate of change from 0 (immediate) 1 - slow to 255 - fast. Defaults to 0
-*/
-  cli();                                // Disable interrupts while changing volatile variables
-  _flags |= FLAG_PWM;                   // Enable PWM for the pin by default
-  if (speed == 0) {                     // If we just set a value
-    _currentLevel = val & MAX10BIT;     // set current to value and clamp
-    _targetLevel  = _currentLevel;      // and set target to value as well
-    _changeSpeed  = 0;                  // change speed is not used
-    if (_currentLevel == 0) {           // if PWM on and value is OFF
-      _flags &= ~FLAG_PWM;              // turn off PWM flag
-      pinOff();                         // turn off pin
-    } else {                            // otherwise
-      if (_currentLevel == MAX10BIT) {  // if PWM on and value is ON
-        _flags &= ~FLAG_PWM;            // turn off PWM flag
-        pinOn();                        // turn off pin
-      }                                 // if-then ON
-    }                                   // if-then-else OFF
-  } else {                              // otherwise we have a change
-    _targetLevel  = val & MAX10BIT;     // just set a new target and clamp
-    _changeSpeed  = speed;              // and set a change rate
-    _changeTicker = speed;              // and set the ticker variable
-  }                                     // if-then-else immediate
-  if (_flags & FLAG_PWM) {              // If PWM is need, then
-    setInterrupts(true);                // turn on interrupts
-  }                                     // if-then PWM needed
-  sei();                                // Re-enable interrupts after changing values
-}  // of function "set()"
-void smoothLED::pwmISR() {
-  /*!
-  @brief     Function to actually perform the PWM on all pins
-  @details   This function is the interrupt handler for TIMER1_COMPA and performs the PWM turning ON
-             and OFF of all the pins defined in the instances of the class.  It is called very often
-             and therefore needs to be as compact as possible. If the LED is set to 30Hz then this
-             ISR is call 30*1023 = 30690 times a second, or every 32.5 microseconds. At 16MHz the
-             microprocessor only executes 16 instructions per microsecond so it is really important
-             to minimize time spent here.
-             This function iterates through all the instances of the smoothLED class and sets each
-             pin ON or OFF for the appropriate number of cycles.
-  */
-  static uint16_t counter{0};             // loop 0-1023 for software PWM, incrementing on each call
-  smoothLED *     p = _firstLink;         // set ptr to start of linked list of class instances
-  while (p != nullptr) {                  // loop through all class instances
-    if (p->_portRegister != nullptr) {    // skip if the pin is not initialized
-      if (p->_currentLevel == counter) {  // if  we've reached the PWM threshold
-        p->pinOff();                      // turn pin off
-      } else {                            // otherwise
-        if (counter == 0) {               // if we've rolled over and are at start,
-          p->pinOn();                     // turn the pin on
-        }                                 // if-then turn ON LED
-      }                                   // if-then-else turn off LED
-    }                                     // if then a valid pin
-    p = p->_nextLink;                     // go to next class instance
-  }                                       // of while loop to traverse  list
-  ++counter &= MAX10BIT;                  // increment and clamp 0-1023
-}  // of function "pwmISR()"
-
-void smoothLED::faderISR() {
-  /*!
-    @brief   Performs fading PWM functions
-    @details While the "pwmISR()" needs to be called very frequently in order to perform PWM on the
-             pins, the actual fading effect doesn't need to be called that often. Hence this
-             function is attached to the TIMER0_COMPA_vect and TIMER0_COMPB_vect and triggered by
-             those. The TIMER0 is used by the Arduino for timing (millis() and micros() functions),
-             and it is set to overflow roughly every millisecond. By adding these COMPA and COMPB
-             triggers, we get a rate of about 500ms for this function, which is enough for a full
-             fade from 0 to 1023 to take half a second at top speed.
-  */
-  smoothLED *p = _firstLink;                    // set ptr to first link for loop
-  bool       noPWM{true};                       // Turned off if any pin uses PWM
-  while (p != nullptr) {                        // loop through all class instances
-    if (p->_currentLevel == p->_targetLevel) {  // if we have a static PWM value
-      /*********************************************************************************************
-      ** If the PWM is static and either OFF or ON, then set the value and the FLAG_PWM bit so    **
-      ** the ISR doesn't need to process it.                                                      **
-      *********************************************************************************************/
-      if (p->_currentLevel == 0 && (p->_flags & FLAG_PWM)) {  // if PWM on and value is OFF
-        p->_flags &= ~FLAG_PWM;                               // turn off PWM flag
-        p->pinOff();                                          // turn off pin
-      } else {
-        if (p->_currentLevel == MAX10BIT && (p->_flags & FLAG_PWM)) {  // if PWM on and value is ON
-          p->_flags &= ~FLAG_PWM;                                      // turn off PWM flag
-          p->pinOn();                                                  // turn off pin
-        }
-      }  // if-then-else PWM and OFF
-    } else {
-      /*********************************************************************************************
-      ** Perform the dynamic PWM change at the appropriate speed                                  **
-      *********************************************************************************************/
-      if (p->_currentLevel != p->_targetLevel && ++p->_changeTicker == 0) {
-        p->_changeTicker = p->_changeSpeed;        // then reset counter
-        if (p->_currentLevel > p->_targetLevel) {  // choose direction
-          --p->_currentLevel;                      // current > target
-        } else {                                   // otherwise
-          ++p->_currentLevel;                      // current < target
-        }                                          // if-then-else get dimmer
-      }                                            // if-then we need to change current value
-    }                                              // if-then-else no change in PWM
-    if (p->_flags & FLAG_PWM) noPWM = false;       // At least one pin uses PWM
-    p = p->_nextLink;                              // go to next class instance
-  }                                                // of while loop to traverse  list
-  /*************************************************************************************************
-  ** If no pins in our class instances are using PWM,  then we can save lots of CPU cycles by     **
-  ** disabling all of the interrupts that we are using. Once a pin is set the interruptes are re- **
-  ** enabled.                                                                                     **
-  *************************************************************************************************/
-  if (noPWM) {             // If no pins are using PWM
-    setInterrupts(false);  // turn off all class interrupts
-  }                        // if-then no pins are using PWM
-}  // of function "faderISR()"
-
 void smoothLED::setInterrupts(const bool status) {
   /*!
   @brief   Turns smoothLED interrupts ON or OFF
@@ -409,3 +279,133 @@ void smoothLED::setInterrupts(const bool status) {
   }                            // if-then-else turn on interrupts
   sei();                       // Re-enable interrupts after changing values
 }  // of function "setInterrupts()"
+void smoothLED::hertz(const uint8_t hertz) const {
+  /*!
+@brief     Set the PWM frequency
+@details   The function sets the PWM frequency. The actual interrupt rate is 1023 times the Hertz
+           value specified, that is accounted for in the formula.  While rate down to 1Hz can be
+           given, anything below 30 (depending on the LED and brightness) causes visible flickering
+           and should be avoided. Any number beyond XXXX is ignored, as the interrupt rate would be
+           so high that there are no CPU cycles left to process the main program.
+@param[in] hertz    Unsigned integer Hertz setting for LED PWM
+*/
+#if defined(OCR1AL)
+  OCR1A = static_cast<uint16_t>(
+      (F_CPU / static_cast<unsigned long>(1023) / static_cast<unsigned long>(hertz)) - 1);
+#endif
+}  // of function "hertz()"
+void smoothLED::set(const uint16_t &val, const uint8_t speed) {
+  /*!
+  @brief     sets the LED
+  @details   This function does not actually set the LED, it just writes the corresponding parameter
+             values to the instance variables. The setting of the pin state is done in the
+             "pwmISR()" function which is called by the interrupt triggered byt the timer.
+  @param[in] val    The value 0-1023 to set the LED. Defaults to 0 (OFF)
+  @param[in] speed  The rate of change from 0 (immediate) 1 - slow to 255 - fast. Defaults to 0
+*/
+  cli();                                // Disable interrupts while changing volatile variables
+  _flags |= FLAG_PWM;                   // Enable PWM for the pin by default
+  if (speed == 0) {                     // If we just set a value
+    _currentLevel = val & MAX10BIT;     // set current to value and clamp
+    _targetLevel  = _currentLevel;      // and set target to value as well
+    _changeSpeed  = 0;                  // change speed is not used
+    if (_currentLevel == 0) {           // if PWM on and value is OFF
+      _flags &= ~FLAG_PWM;              // turn off PWM flag
+      pinOff();                         // turn off pin
+    } else {                            // otherwise
+      if (_currentLevel == MAX10BIT) {  // if PWM on and value is ON
+        _flags &= ~FLAG_PWM;            // turn off PWM flag
+        pinOn();                        // turn off pin
+      }                                 // if-then ON
+    }                                   // if-then-else OFF
+  } else {                              // otherwise we have a change
+    _targetLevel  = val & MAX10BIT;     // just set a new target and clamp
+    _changeSpeed  = speed;              // and set a change rate
+    _changeTicker = speed;              // and set the ticker variable
+  }                                     // if-then-else immediate
+  if (_flags & FLAG_PWM) {              // If PWM is need, then
+    setInterrupts(true);                // turn on interrupts
+  }                                     // if-then PWM needed
+  sei();                                // Re-enable interrupts after changing values
+}  // of function "set()"
+void smoothLED::pwmISR() {
+  /*!
+  @brief     Function to actually perform the PWM on all pins
+  @details   This function is the interrupt handler for TIMER1_COMPA and performs the PWM turning ON
+             and OFF of all the pins defined in the instances of the class.  It is called very often
+             and therefore needs to be as compact as possible. If the LED is set to 30Hz then this
+             ISR is call 30*1023 = 30690 times a second, or every 32.5 microseconds. At 16MHz the
+             microprocessor only executes 16 instructions per microsecond so it is really important
+             to minimize time spent here.
+             This function iterates through all the instances of the smoothLED class and sets each
+             pin ON or OFF for the appropriate number of cycles.
+  */
+  smoothLED *p = _firstLink;                 // set ptr to start of linked list of class instances
+  while (p != nullptr) {                     // loop through all class instances
+    if (p->_portRegister != nullptr) {       // skip if the pin is not initialized
+      if (p->_currentCIE == counterPWM) {  // if  we've reached the PWM threshold
+        p->pinOff();                         // turn pin off
+      } else {                               // otherwise
+        if (counterPWM == 0) {               // if we've rolled over and are at start,
+          p->pinOn();                        // turn the pin on
+        }                                    // if-then turn ON LED
+      }                                      // if-then-else turn off LED
+    }                                        // if then a valid pin
+    p = p->_nextLink;                        // go to next class instance
+  }                                          // of while loop to traverse  list
+  ++counterPWM &= MAX10BIT;                  // Pre-increment and clamp to range 0 - 1023
+}  // of function "pwmISR()"
+void smoothLED::faderISR() {
+  /*!
+    @brief   Performs fading PWM functions
+    @details While the "pwmISR()" needs to be called very frequently in order to perform PWM on the
+             pins, the actual fading effect doesn't need to be called that often. Hence this
+             function is attached to the TIMER0_COMPA_vect and TIMER0_COMPB_vect and triggered by
+             those. The TIMER0 is used by the Arduino for timing (millis() and micros() functions),
+             and it is set to overflow roughly every millisecond. By adding these COMPA and COMPB
+             triggers, we get a rate of about 500ms for this function, which is enough for a full
+             fade from 0 to 1023 to take half a second at top speed.
+  */
+  smoothLED *p = _firstLink;                    // set ptr to first link for loop
+  bool       noPWM{true};                       // Turned off if any pin uses PWM
+  while (p != nullptr) {                        // loop through all class instances
+    if (p->_currentLevel == p->_targetLevel) {  // if we have a static PWM value
+      /*********************************************************************************************
+      ** If the PWM is static and either OFF or ON, then set the value and the FLAG_PWM bit so    **
+      ** the ISR doesn't need to process it.                                                      **
+      *********************************************************************************************/
+      if (p->_currentLevel == 0 && (p->_flags & FLAG_PWM)) {  // if PWM on and value is OFF
+        p->_flags &= ~FLAG_PWM;                               // turn off PWM flag
+        p->pinOff();                                          // turn off pin
+      } else {
+        if (p->_currentLevel == MAX10BIT && (p->_flags & FLAG_PWM)) {  // if PWM on and value is ON
+          p->_flags &= ~FLAG_PWM;                                      // turn off PWM flag
+          p->pinOn();                                                  // turn off pin
+        }
+      }  // if-then-else PWM and OFF
+    } else {
+      /*********************************************************************************************
+      ** Perform the dynamic PWM change at the appropriate speed                                  **
+      *********************************************************************************************/
+      if (p->_currentLevel != p->_targetLevel && ++p->_changeTicker == 0) {
+        p->_changeTicker = p->_changeSpeed;                       // then reset counter
+        if (p->_currentLevel > p->_targetLevel) {                 // choose direction
+          --p->_currentLevel;                                     // current > target
+        } else {                                                  // otherwise
+          ++p->_currentLevel;                                     // current < target
+        }                                                         // if-then-else get dimmer
+        p->_currentCIE = pgm_read_word(kcie + p->_currentLevel);  // set new cie value
+      }                                                           // if-then  change current value
+    }                                                             // if-then-else no change in PWM
+    if (p->_flags & FLAG_PWM) noPWM = false;                      // At least one pin uses PWM
+    p = p->_nextLink;                                             // go to next class instance
+  }                                                               // of while loop to traverse  list
+  /*************************************************************************************************
+  ** If no pins in our class instances are using PWM,  then we can save lots of CPU cycles by     **
+  ** disabling all of the interrupts that we are using. Once a pin is set the interruptes are re- **
+  ** enabled.                                                                                     **
+  *************************************************************************************************/
+  if (noPWM) {             // If no pins are using PWM
+    setInterrupts(false);  // turn off all class interrupts
+  }                        // if-then no pins are using PWM
+}  // of function "faderISR()"

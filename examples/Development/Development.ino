@@ -51,15 +51,7 @@ void setup() {
     Serial.println(F("OK"));
   else
     Serial.println(F("ERROR!"));
-
   RED.hertz(60);
-  RED.set(500);
-  GREEN.set(500);
-  BLUE.set(500);
-  //    Y1.set(500);
-  //    Y2.set(500);
-  //    while (1)
-  //     ;
 }
 
 // the loop function runs over and over again until power down or reset
@@ -67,9 +59,9 @@ void loop() {
   RED.set(0);
   GREEN.set(0);
   BLUE.set(0);
-  RED.set(1023, 255);
-  GREEN.set(1023, 255);
-  BLUE.set(1023, 255);
+  RED.set(1023, 100);
+  GREEN.set(1023, 100);
+  BLUE.set(1023, 100);
   delay(10000);
   Serial.println(F("Next..."));
 }

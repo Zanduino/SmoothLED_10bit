@@ -62,14 +62,14 @@ Written by Arnd <Arnd@Zanduino.Com> at https://www.github.com/SV-Zanshin
 #if defined(ARDUINO) && ARDUINO >= 100
 #include <Arduino.h>
 #else
-#include "WProgram.h"
+#include <WProgram.h>
 #endif
+
 /***************************************************************************************************
 ** Define all constants that are to be globally visible                                           **
 ***************************************************************************************************/
-const bool     INVERT_LED{true};      //!< A Value of 0 denotes 100% duty cycle when set
-const bool     NO_INVERT_LED{false};  //!< Default. When value is 0 it means off
-const uint16_t MAX10BIT{0x3FF};       //!< 1023 decimal - biggest value for 10 bits
+const bool INVERT_LED{true};      //!< A Value of 0 denotes 100% duty cycle when set
+const bool NO_INVERT_LED{false};  //!< Default. When value is 0 it means off
 /*! @brief   Linear PWM brightness progression table using CIE brightness levels
     @details A linear progression of PWM values of 0 through to 1023 (from "off" to 100%
              "on") does not correspond to a linear increase in percieved brightness to the
@@ -146,39 +146,41 @@ class smoothLED {
     @brief   Class to allow PWM pins to be used with 10-bit PWM regardless of which timer they are
              attached to
   */
- public:                                               // publicly available members
-  smoothLED();                                         // Class constructor
-  ~smoothLED();                                        // Class destructor
-  smoothLED(const smoothLED&) = delete;                // disable copy constructor
-  smoothLED(smoothLED&& led)  = delete;                // disable move constructor
-  smoothLED&  operator++();                            // prefix increment overload
-  smoothLED   operator++(int) = delete;                // disallow postfix increment
-  smoothLED&  operator--();                            // prefix decrement overload
-  smoothLED   operator--(int) = delete;                // disallow postfix decrement
-  smoothLED&  operator+=(const int16_t& value);        // addition overload
-  smoothLED&  operator-=(const int16_t& value);        // subtraction overload
-  smoothLED&  operator=(const smoothLED& value);       // equals overload
-  smoothLED&  operator+(const int16_t& value);         // addition overload
-  smoothLED&  operator-(const int16_t& value);         // subtraction overload
-  bool        begin(const uint8_t pin,                 // Initialize a pin for PWM
-                    const bool    invert = false);        // optional invert values
-  void        hertz(const uint8_t hertz) const;        // Set hertz rate for PWM
-  static void pwmISR();                                // Actual PWM function
-  static void faderISR();                              // Actual fader function
-  void        set(const uint16_t& val   = 0,           // Set a pin's value
-                  const uint8_t&  speed = 0);           // optional change speed
- private:                                              // declare the private class members
-  static void       setInterrupts(const bool status);  // Turn interrupts on or off
-  static smoothLED* _firstLink;                        //!< Static ptr to first instance in  list
-  smoothLED*        _nextLink{nullptr};                //!< Ptr to next instance in  list
-  volatile uint16_t _currentLevel{0};                  //!< Contains the current PWM level
-  uint16_t          _targetLevel{0};                   //!< Contains the target PWM level
-  uint8_t           _changeSpeed{0};                   //!< Contains the transition speed
-  uint8_t           _changeTicker{0};                  //!< Used in counting ticks for change speed
-  volatile uint8_t* _portRegister{nullptr};            //!< Ptr to the actual PORT{n} Register
-  uint8_t           _registerBitMask{0};               //!< bit mask for the bit used in PORT{n}
-  uint8_t           _flags{0};                         //!< Status bits, see cpp for details
+ public:                                          // Declare all publicly visible members
+  smoothLED();                                    // Class constructor
+  ~smoothLED();                                   // Class destructor
+  smoothLED(const smoothLED&) = delete;           // disable copy constructor
+  smoothLED(smoothLED&& led)  = delete;           // disable move constructor
+  smoothLED&  operator++();                       // prefix increment overload
+  smoothLED   operator++(int) = delete;           // disallow postfix increment
+  smoothLED&  operator--();                       // prefix decrement overload
+  smoothLED   operator--(int) = delete;           // disallow postfix decrement
+  smoothLED&  operator+=(const int16_t& value);   // addition overload
+  smoothLED&  operator-=(const int16_t& value);   // subtraction overload
+  smoothLED&  operator=(const smoothLED& value);  // equals overload
+  smoothLED&  operator+(const int16_t& value);    // addition overload
+  smoothLED&  operator-(const int16_t& value);    // subtraction overload
+  bool        begin(const uint8_t pin,            // Initialize a pin for PWM
+                    const bool    invert = false);   // optional invert values
+  void        hertz(const uint8_t hertz) const;   // Set hertz rate for PWM
+  static void pwmISR();                           // Actual PWM function
+  static void faderISR();                         // Actual fader function
+  void        set(const uint16_t& val,            // Set a pin's value
+                  const uint8_t   speed = 0);       // optional change speed
+ private:                                         // declare the private class members
+  static smoothLED* _firstLink;                   //!< Static pointer to first instance in list
+  static uint16_t   counterPWM;                   //!< loop counter 0-1023 for software PWM
+  volatile uint8_t* _portRegister{nullptr};       //!< Pointer to the actual PORT{n} Register
+  smoothLED*        _nextLink{nullptr};           //!< Pointer to the next instance in  list
+  uint8_t           _registerBitMask{0};          //!< bit mask for the bit used in PORT{n}
+  volatile uint16_t _currentLevel{0};             //!< Current PWM level 0-1023
+  volatile uint16_t _currentCIE{0};               //!< Current PWM level from cie table
+  uint16_t          _targetLevel{0};              //!< Target PWM level 0-1023
+  uint8_t           _changeSpeed{0};              //!< Speed at which fading happens 0-255
+  uint8_t           _changeTicker{0};             //!< Countdown in ticks used for fading
+  uint8_t           _flags{0};                    //!< Status bits, see cpp for details
   inline void       pinOn() const __attribute__((always_inline));   // Turn LED on
   inline void       pinOff() const __attribute__((always_inline));  // Turn LED off
-};                                                                  // of class smoothLED
+  static void       setInterrupts(const bool status);               // Turn interrupts on or off
+};  // of class smoothLED                                           //
 #endif
