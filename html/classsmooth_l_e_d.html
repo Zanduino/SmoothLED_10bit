@@ -84,8 +84,6 @@ $(document).ready(function(){initNavTree('classsmooth_l_e_d.html','');});
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="classsmooth_l_e_d-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">smoothLED Class Reference</div>  </div>
@@ -136,50 +134,10 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:aebd93eeb96de610346e966831186a0a6"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsmooth_l_e_d.html#aebd93eeb96de610346e966831186a0a6">performPWM</a> ()</td></tr>
-<tr class="separator:aebd93eeb96de610346e966831186a0a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:a18eebf47a31af5d3f4726a84f07f7c08"><td class="memItemLeft" align="right" valign="top"><a id="a18eebf47a31af5d3f4726a84f07f7c08"></a>
-<a class="el" href="classsmooth_l_e_d.html">smoothLED</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsmooth_l_e_d.html#a18eebf47a31af5d3f4726a84f07f7c08">_nextLink</a> {nullptr}</td></tr>
-<tr class="memdesc:a18eebf47a31af5d3f4726a84f07f7c08"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ptr to next instance in list. <br /></td></tr>
-<tr class="separator:a18eebf47a31af5d3f4726a84f07f7c08"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9a69cd1cffef07e38abf8f1908195a2d"><td class="memItemLeft" align="right" valign="top"><a id="a9a69cd1cffef07e38abf8f1908195a2d"></a>
-uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsmooth_l_e_d.html#a9a69cd1cffef07e38abf8f1908195a2d">_currentLevel</a> {0}</td></tr>
-<tr class="memdesc:a9a69cd1cffef07e38abf8f1908195a2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains the current PWM level. <br /></td></tr>
-<tr class="separator:a9a69cd1cffef07e38abf8f1908195a2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5c7e23867c2db17c5bfaa627395b4cc"><td class="memItemLeft" align="right" valign="top"><a id="aa5c7e23867c2db17c5bfaa627395b4cc"></a>
-uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsmooth_l_e_d.html#aa5c7e23867c2db17c5bfaa627395b4cc">_targetLevel</a> {0}</td></tr>
-<tr class="memdesc:aa5c7e23867c2db17c5bfaa627395b4cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains the target PWM level. <br /></td></tr>
-<tr class="separator:aa5c7e23867c2db17c5bfaa627395b4cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaca8fae5c3e114a3104c31f59241d862"><td class="memItemLeft" align="right" valign="top"><a id="aaca8fae5c3e114a3104c31f59241d862"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsmooth_l_e_d.html#aaca8fae5c3e114a3104c31f59241d862">_changeSpeed</a> {0}</td></tr>
-<tr class="memdesc:aaca8fae5c3e114a3104c31f59241d862"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains the transition speed. <br /></td></tr>
-<tr class="separator:aaca8fae5c3e114a3104c31f59241d862"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7759471271f84449d22b72e4795f8ad8"><td class="memItemLeft" align="right" valign="top"><a id="a7759471271f84449d22b72e4795f8ad8"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsmooth_l_e_d.html#a7759471271f84449d22b72e4795f8ad8">_changeTicker</a> {0}</td></tr>
-<tr class="memdesc:a7759471271f84449d22b72e4795f8ad8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used in counting ticks for change speed. <br /></td></tr>
-<tr class="separator:a7759471271f84449d22b72e4795f8ad8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a23485fc6dc75935a119ba2204667234a"><td class="memItemLeft" align="right" valign="top"><a id="a23485fc6dc75935a119ba2204667234a"></a>
-volatile uint8_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsmooth_l_e_d.html#a23485fc6dc75935a119ba2204667234a">_portRegister</a> {nullptr}</td></tr>
-<tr class="memdesc:a23485fc6dc75935a119ba2204667234a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ptr to the actual PORT{n} Register. <br /></td></tr>
-<tr class="separator:a23485fc6dc75935a119ba2204667234a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38d7e69e29e8f2ccdc425d9c4da0da9f"><td class="memItemLeft" align="right" valign="top"><a id="a38d7e69e29e8f2ccdc425d9c4da0da9f"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsmooth_l_e_d.html#a38d7e69e29e8f2ccdc425d9c4da0da9f">_bitMaskRegister</a> {0}</td></tr>
-<tr class="memdesc:a38d7e69e29e8f2ccdc425d9c4da0da9f"><td class="mdescLeft">&#160;</td><td class="mdescRight">bit mask for the bit used in PORT{n} <br /></td></tr>
-<tr class="separator:a38d7e69e29e8f2ccdc425d9c4da0da9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a683019f26f342473dbb3c01a91e765f1"><td class="memItemLeft" align="right" valign="top"><a id="a683019f26f342473dbb3c01a91e765f1"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsmooth_l_e_d.html#a683019f26f342473dbb3c01a91e765f1">_inverted</a> {false}</td></tr>
-<tr class="memdesc:a683019f26f342473dbb3c01a91e765f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">False = PWM0 is "off". <br /></td></tr>
-<tr class="separator:a683019f26f342473dbb3c01a91e765f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
-Static Public Attributes</h2></td></tr>
-<tr class="memitem:ab36d3521b4a78723501a56989f8527ac"><td class="memItemLeft" align="right" valign="top"><a id="ab36d3521b4a78723501a56989f8527ac"></a>
-static <a class="el" href="classsmooth_l_e_d.html">smoothLED</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsmooth_l_e_d.html#ab36d3521b4a78723501a56989f8527ac">_firstLink</a> {nullptr}</td></tr>
-<tr class="memdesc:ab36d3521b4a78723501a56989f8527ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Static ptr to first instance in list. <br /></td></tr>
-<tr class="separator:ab36d3521b4a78723501a56989f8527ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf0bc9b6fdc3fe62b2bb4da2db83d251"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsmooth_l_e_d.html#adf0bc9b6fdc3fe62b2bb4da2db83d251">pwmISR</a> ()</td></tr>
+<tr class="separator:adf0bc9b6fdc3fe62b2bb4da2db83d251"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a614ad693ed59ea963488460cd494f817"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsmooth_l_e_d.html#a614ad693ed59ea963488460cd494f817">faderISR</a> ()</td></tr>
+<tr class="separator:a614ad693ed59ea963488460cd494f817"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class to allow PWM pins to be used with 10-bit PWM regardless of which timer they are attached to. </p>
@@ -257,6 +215,33 @@ static <a class="el" href="classsmooth_l_e_d.html">smoothLED</a> *&#160;</td><td
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>bool TRUE on success, FALSE when the pin is not a PWM-Capable one</dd></dl>
+
+</div>
+</div>
+<a id="a614ad693ed59ea963488460cd494f817"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a614ad693ed59ea963488460cd494f817">&#9670;&nbsp;</a></span>faderISR()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void smoothLED::faderISR </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Performs fading PWM functions</p>
+<p>While the "pwmISR()" needs to be called very frequently in order to perform PWM on the pins, the actual fading effect doesn't need to be called that often. Hence this function is attached to the TIMER0_COMPA_vect and TIMER0_COMPB_vect and triggered by those. The TIMER0 is used by the Arduino for timing (millis() and micros() functions), and it is set to overflow roughly every millisecond. By adding these COMPA and COMPB triggers, we get a rate of about 500ms for this function, which is enough for a full fade from 0 to 1023 to take half a second at top speed.</p>
 
 </div>
 </div>
@@ -429,8 +414,8 @@ static <a class="el" href="classsmooth_l_e_d.html">smoothLED</a> *&#160;</td><td
 
 </div>
 </div>
-<a id="aebd93eeb96de610346e966831186a0a6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aebd93eeb96de610346e966831186a0a6">&#9670;&nbsp;</a></span>performPWM()</h2>
+<a id="adf0bc9b6fdc3fe62b2bb4da2db83d251"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf0bc9b6fdc3fe62b2bb4da2db83d251">&#9670;&nbsp;</a></span>pwmISR()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -439,7 +424,7 @@ static <a class="el" href="classsmooth_l_e_d.html">smoothLED</a> *&#160;</td><td
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void smoothLED::performPWM </td>
+          <td class="memname">void smoothLED::pwmISR </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -452,7 +437,7 @@ static <a class="el" href="classsmooth_l_e_d.html">smoothLED</a> *&#160;</td><td
 </table>
 </div><div class="memdoc">
 <p>Function to actually perform the PWM on all pins</p>
-<p>This function is not called by any user functions, it is triggered directly from the ISR which gets called when the TIMER1_COMPA condition is met. This condition is a timed condition which can be modified by changing the interrupt rate using the "hertz()" function. Any values below 30Hz result in visible flickering at certain PWM values, but the higher the Hertz the more time is spent in the interrupt and the less time is available to the user program. This function iterates through all the instances of the <a class="el" href="classsmooth_l_e_d.html" title="Class to allow PWM pins to be used with 10-bit PWM regardless of which timer they are attached to...">smoothLED</a> class and sets each pin to the appropriate PWM rate.</p>
+<p>This function is the interrupt handler for TIMER1_COMPA and performs the PWM turning ON and OFF of all the pins defined in the instances of the class. It is called very often and therefore needs to be as compact as possible. If the LED is set to 30Hz then this ISR is call 30*1023 = 30690 times a second, or every 32.5 microseconds. At 16MHz the microprocessor only executes 16 instructions per microsecond so it is really important to minimize time spent here. This function iterates through all the instances of the <a class="el" href="classsmooth_l_e_d.html" title="Class to allow PWM pins to be used with 10-bit PWM regardless of which timer they are attached to...">smoothLED</a> class and sets each pin ON or OFF for the appropriate number of cycles.</p>
 
 </div>
 </div>
@@ -482,7 +467,7 @@ static <a class="el" href="classsmooth_l_e_d.html">smoothLED</a> *&#160;</td><td
       </table>
 </div><div class="memdoc">
 <p>sets the LED</p>
-<p>This function does not actually set the LED, it just writes the corresponding parameter values to the instance variables. The setting of the pin state is done in the "performPWM()" function which is called by the interrupt triggered byt the timer. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>This function does not actually set the LED, it just writes the corresponding parameter values to the instance variables. The setting of the pin state is done in the "pwmISR()" function which is called by the interrupt triggered byt the timer. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">val</td><td>The value 0-1023 to set the LED. Defaults to 0 (OFF) </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">speed</td><td>The rate of change from 0 (immediate) 1 - slow to 255 - fast. Defaults to 0</td></tr>

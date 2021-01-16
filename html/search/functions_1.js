@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['hertz',['hertz',['../classsmooth_l_e_d.html#afced7dba38c2898cd1bb44bf465367b3',1,'smoothLED']]]
+  ['faderisr',['faderISR',['../classsmooth_l_e_d.html#a614ad693ed59ea963488460cd494f817',1,'smoothLED']]]
 ];

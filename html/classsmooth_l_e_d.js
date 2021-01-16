@@ -15,13 +15,5 @@ var classsmooth_l_e_d =
     [ "operator--", "classsmooth_l_e_d.html#a12daf3c028f9759ca4abf891dd40cccd", null ],
     [ "operator-=", "classsmooth_l_e_d.html#ab7ad93f53870423be35c15575580154d", null ],
     [ "operator=", "classsmooth_l_e_d.html#a17b80f7aaaed473f26cd39d7b73f37d7", null ],
-    [ "set", "classsmooth_l_e_d.html#a2e15d3c4a78453d2ce34245943b24534", null ],
-    [ "_bitMaskRegister", "classsmooth_l_e_d.html#a38d7e69e29e8f2ccdc425d9c4da0da9f", null ],
-    [ "_changeSpeed", "classsmooth_l_e_d.html#aaca8fae5c3e114a3104c31f59241d862", null ],
-    [ "_changeTicker", "classsmooth_l_e_d.html#a7759471271f84449d22b72e4795f8ad8", null ],
-    [ "_currentLevel", "classsmooth_l_e_d.html#a9a69cd1cffef07e38abf8f1908195a2d", null ],
-    [ "_inverted", "classsmooth_l_e_d.html#a683019f26f342473dbb3c01a91e765f1", null ],
-    [ "_nextLink", "classsmooth_l_e_d.html#a18eebf47a31af5d3f4726a84f07f7c08", null ],
-    [ "_portRegister", "classsmooth_l_e_d.html#a23485fc6dc75935a119ba2204667234a", null ],
-    [ "_targetLevel", "classsmooth_l_e_d.html#aa5c7e23867c2db17c5bfaa627395b4cc", null ]
+    [ "set", "classsmooth_l_e_d.html#a2e15d3c4a78453d2ce34245943b24534", null ]
 ];

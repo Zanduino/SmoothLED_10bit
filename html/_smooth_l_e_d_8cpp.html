@@ -82,7 +82,9 @@ $(document).ready(function(){initNavTree('_smooth_l_e_d_8cpp.html','');});
 
 <div class="header">
   <div class="summary">
-<a href="#define-members">Macros</a>  </div>
+<a href="#define-members">Macros</a> &#124;
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">SmoothLED.cpp File Reference</div>  </div>
 </div><!--header-->
@@ -103,6 +105,24 @@ Macros</h2></td></tr>
 #define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_smooth_l_e_d_8cpp.html#ac4a5536d9bf092116f88b94797ddc882">sbi</a>(sfr,  bit)&#160;&#160;&#160;(_SFR_BYTE(sfr) |= <a class="el" href="_smooth_l_e_d_8cpp.html#a11643f271076024c395a93800b3d9546">_BV</a>(bit))</td></tr>
 <tr class="memdesc:ac4a5536d9bf092116f88b94797ddc882"><td class="mdescLeft">&#160;</td><td class="mdescRight">set bit macro <br /></td></tr>
 <tr class="separator:ac4a5536d9bf092116f88b94797ddc882"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:aec43762dc86e029b395d4e5819192c2d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_smooth_l_e_d_8cpp.html#aec43762dc86e029b395d4e5819192c2d">ISR</a> (TIMER0_COMPA_vect)</td></tr>
+<tr class="separator:aec43762dc86e029b395d4e5819192c2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa513bd38a02761593d0217c8497033ac"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_smooth_l_e_d_8cpp.html#aa513bd38a02761593d0217c8497033ac">ISR</a> (TIMER0_COMPB_vect)</td></tr>
+<tr class="separator:aa513bd38a02761593d0217c8497033ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a4bd1ffe5e3b9c2e05f3a51fe1fc55993"><td class="memItemLeft" align="right" valign="top"><a id="a4bd1ffe5e3b9c2e05f3a51fe1fc55993"></a>
+const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_smooth_l_e_d_8cpp.html#a4bd1ffe5e3b9c2e05f3a51fe1fc55993">FLAG_INVERTED</a> {1}</td></tr>
+<tr class="memdesc:a4bd1ffe5e3b9c2e05f3a51fe1fc55993"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bit mask for inverted LED flag. <br /></td></tr>
+<tr class="separator:a4bd1ffe5e3b9c2e05f3a51fe1fc55993"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6ad415134872eae6e12ee30e12bdc98"><td class="memItemLeft" align="right" valign="top"><a id="ad6ad415134872eae6e12ee30e12bdc98"></a>
+const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_smooth_l_e_d_8cpp.html#ad6ad415134872eae6e12ee30e12bdc98">FLAG_PWM</a> {2}</td></tr>
+<tr class="memdesc:ad6ad415134872eae6e12ee30e12bdc98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bit mask for LED is not 0 or 1023. <br /></td></tr>
+<tr class="separator:ad6ad415134872eae6e12ee30e12bdc98"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h1><a class="anchor" id="SmoothLEDcpp_intro_section"></a>
@@ -110,7 +130,48 @@ Description</h1>
 <p>Arduino Library for Smooth LED library<br />
 <br />
 See main library header file for details </p>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Function Documentation</h2>
+<a id="aec43762dc86e029b395d4e5819192c2d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aec43762dc86e029b395d4e5819192c2d">&#9670;&nbsp;</a></span>ISR() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ISR </td>
+          <td>(</td>
+          <td class="paramtype">TIMER0_COMPA_vect&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Interrupt vector for TIMER0_COMPA</p>
+<p>Indirect call to the TimerISR()</p>
+
+</div>
+</div>
+<a id="aa513bd38a02761593d0217c8497033ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa513bd38a02761593d0217c8497033ac">&#9670;&nbsp;</a></span>ISR() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ISR </td>
+          <td>(</td>
+          <td class="paramtype">TIMER0_COMPB_vect&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Interrupt vector for TIMER0_COMPB</p>
+<p>Indirect call to the TimerISR()</p>
+
+</div>
+</div>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
