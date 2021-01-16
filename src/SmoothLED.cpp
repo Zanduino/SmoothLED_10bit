@@ -386,11 +386,11 @@ void smoothLED::setInterrupts(const bool status) {
       OCR0A = 0x40;  // Comparison register A to 64
       OCR0B = 0xC0;  // Comparison register B to 192
 #if defined(TIMSK0)
-      TIMSK0 |= _BV(OCIE0A);  // TIMER0_COMPA trigger on 0x01
-      TIMSK0 |= _BV(OCIE0B);  // TIMER0_COMPB trigger on 0x80
+      TIMSK0 |= _BV(OCIE0A);
+      TIMSK0 |= _BV(OCIE0B);
 #elif defined(TIMSK)
-      TIMSK |= _BV(OCIE0A);  // TIMER0_COMPA trigger on 0x01 (ATtiny25-45-85)
-      TIMSK |= _BV(OCIE0B);  // TIMER0_COMPB trigger on 0x80
+      TIMSK |= _BV(OCIE0A);
+      TIMSK |= _BV(OCIE0B);
 #else
 #error Neither TIMSK (ATtiny) nor TIMSK0 defined on this platform
 #endif
