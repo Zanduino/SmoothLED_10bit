@@ -7,5 +7,6 @@ var _smooth_l_e_d_8cpp =
     [ "ISR", "_smooth_l_e_d_8cpp.html#aa513bd38a02761593d0217c8497033ac", null ],
     [ "FLAG_INVERTED", "_smooth_l_e_d_8cpp.html#a4bd1ffe5e3b9c2e05f3a51fe1fc55993", null ],
     [ "FLAG_PWM", "_smooth_l_e_d_8cpp.html#ad6ad415134872eae6e12ee30e12bdc98", null ],
+    [ "kcie", "_smooth_l_e_d_8cpp.html#aaa2e2cdda8f9aef9851c7a50310348fc", null ],
     [ "MAX10BIT", "_smooth_l_e_d_8cpp.html#a2340e28adcfde72281e382a92568d173", null ]
 ];
