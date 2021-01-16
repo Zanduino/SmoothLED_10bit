@@ -167,7 +167,6 @@ bool smoothLED::begin(const uint8_t pin, const bool invert) {
                     are reversed
   @return    bool   TRUE on success, FALSE when the pin is not a PWM-Capable one
 */
-
   if (pin > NUM_DIGITAL_PINS) return false;                         // return on bad pin number
   _registerBitMask = digitalPinToBitMask(pin);                      // get the bitmask for pin
   _portRegister    = portOutputRegister(digitalPinToPort(pin));     // get PORTn for pin
@@ -188,10 +187,10 @@ bool smoothLED::begin(const uint8_t pin, const bool invert) {
   }                                                                 // if-then-else inverted LED
   volatile uint8_t *ddr = portModeRegister(digitalPinToPort(pin));  // get DDRn port for pin
   *ddr |= _registerBitMask;                                         // make the pin an output
+  hertz(30);                                                        // Start off with 30Hz
   setInterrupts(true);                                              // turn on interrupts
-  hertz(40);                                                        // Start off with 40Hz
 }  // of function "begin()"
-void smoothLED::pinOn() {
+void smoothLED::pinOn() const {
   /*!
   @brief   Turn the LED to 100% on
   @details Since keeping PWM on and setting the register to the highest value doesn't actually
@@ -205,7 +204,7 @@ void smoothLED::pinOn() {
     *_portRegister |= _registerBitMask;
   }  // if-then-else _inverted
 }
-void smoothLED::pinOff() {
+void smoothLED::pinOff() const {
   /*!
     @brief   Turn the LED off
     @details Since keeping PWM on and setting the register to the lowest value doesn't actually
@@ -337,7 +336,6 @@ void smoothLED::faderISR() {
   ** enabled.                                                                                     **
   *************************************************************************************************/
   if (noPWM) {  // If no pins are using PWM
-    Serial.print("NO PWM, turning off interrupts");
     setInterrupts(false);  // turn off all class interrupts
   }                        // if-then no pins are using PWM
 }  // of function "faderISR()"

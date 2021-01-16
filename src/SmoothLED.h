@@ -147,39 +147,39 @@ class smoothLED {
     @brief   Class to allow PWM pins to be used with 10-bit PWM regardless of which timer they are
              attached to
   */
- public:                                                      // publicly available members
-  smoothLED();                                                // Class constructor
-  ~smoothLED();                                               // Class destructor
-  smoothLED(const smoothLED&) = delete;                       // disable copy constructor
-  smoothLED(smoothLED&& led)  = delete;                       // disable move constructor
-  smoothLED&  operator++();                                   // prefix increment overload
-  smoothLED   operator++(int) = delete;                       // disallow postfix increment
-  smoothLED&  operator--();                                   // prefix decrement overload
-  smoothLED   operator--(int) = delete;                       // disallow postfix decrement
-  smoothLED&  operator+=(const int16_t& value);               // addition overload
-  smoothLED&  operator-=(const int16_t& value);               // subtraction overload
-  smoothLED&  operator=(const smoothLED& value);              // equals overload
-  smoothLED&  operator+(const int16_t& value);                // addition overload
-  smoothLED&  operator-(const int16_t& value);                // subtraction overload
-  bool        begin(const uint8_t pin,                        // Initialize a pin for PWM
-                    const bool    invert = false);               // optional invert values
-  void        hertz(const uint8_t hertz) const;               // Set hertz rate for PWM
-  static void pwmISR();                                       // Actual PWM function
-  static void faderISR();                                     // Actual fader function
-  void        set(const uint16_t& val   = 0,                  // Set a pin's value
-                  const uint8_t&  speed = 0);                  // optional change speed
- private:                                                     // declare the private class members
-  inline void       pinOn() __attribute__((always_inline));   // Turn LED on
-  inline void       pinOff() __attribute__((always_inline));  // Turn LED off
-  static void       setInterrupts(const bool status);
-  static smoothLED* _firstLink;              //!< Static ptr to first instance in  list
-  smoothLED*        _nextLink{nullptr};      //!< Ptr to next instance in  list
-  volatile uint16_t _currentLevel{0};        //!< Contains the current PWM level
-  uint16_t          _targetLevel{0};         //!< Contains the target PWM level
-  uint8_t           _changeSpeed{0};         //!< Contains the transition speed
-  uint8_t           _changeTicker{0};        //!< Used in counting ticks for change speed
-  volatile uint8_t* _portRegister{nullptr};  //!< Ptr to the actual PORT{n} Register
-  uint8_t           _registerBitMask{0};     //!< bit mask for the bit used in PORT{n}
-  uint8_t           _flags{0};               //!< Status bits, see cpp for details
-};                                           // of class smoothLED
+ public:                                               // publicly available members
+  smoothLED();                                         // Class constructor
+  ~smoothLED();                                        // Class destructor
+  smoothLED(const smoothLED&) = delete;                // disable copy constructor
+  smoothLED(smoothLED&& led)  = delete;                // disable move constructor
+  smoothLED&  operator++();                            // prefix increment overload
+  smoothLED   operator++(int) = delete;                // disallow postfix increment
+  smoothLED&  operator--();                            // prefix decrement overload
+  smoothLED   operator--(int) = delete;                // disallow postfix decrement
+  smoothLED&  operator+=(const int16_t& value);        // addition overload
+  smoothLED&  operator-=(const int16_t& value);        // subtraction overload
+  smoothLED&  operator=(const smoothLED& value);       // equals overload
+  smoothLED&  operator+(const int16_t& value);         // addition overload
+  smoothLED&  operator-(const int16_t& value);         // subtraction overload
+  bool        begin(const uint8_t pin,                 // Initialize a pin for PWM
+                    const bool    invert = false);        // optional invert values
+  void        hertz(const uint8_t hertz) const;        // Set hertz rate for PWM
+  static void pwmISR();                                // Actual PWM function
+  static void faderISR();                              // Actual fader function
+  void        set(const uint16_t& val   = 0,           // Set a pin's value
+                  const uint8_t&  speed = 0);           // optional change speed
+ private:                                              // declare the private class members
+  static void       setInterrupts(const bool status);  // Turn interrupts on or off
+  static smoothLED* _firstLink;                        //!< Static ptr to first instance in  list
+  smoothLED*        _nextLink{nullptr};                //!< Ptr to next instance in  list
+  volatile uint16_t _currentLevel{0};                  //!< Contains the current PWM level
+  uint16_t          _targetLevel{0};                   //!< Contains the target PWM level
+  uint8_t           _changeSpeed{0};                   //!< Contains the transition speed
+  uint8_t           _changeTicker{0};                  //!< Used in counting ticks for change speed
+  volatile uint8_t* _portRegister{nullptr};            //!< Ptr to the actual PORT{n} Register
+  uint8_t           _registerBitMask{0};               //!< bit mask for the bit used in PORT{n}
+  uint8_t           _flags{0};                         //!< Status bits, see cpp for details
+  inline void       pinOn() const __attribute__((always_inline));   // Turn LED on
+  inline void       pinOff() const __attribute__((always_inline));  // Turn LED off
+};                                                                  // of class smoothLED
 #endif
