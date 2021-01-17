@@ -56,12 +56,12 @@ void setup() {
 
 // the loop function runs over and over again until power down or reset
 void loop() {
-  RED.set(0);
-  GREEN.set(0);
-  BLUE.set(0);
-  RED.set(1023, 100);
-  GREEN.set(1023, 100);
-  BLUE.set(1023, 100);
+  RED.set(1023);
+  GREEN.set(1023);
+  BLUE.set(1023);
+  RED.set(0, 250);
+  GREEN.set(0, 250);
+  BLUE.set(0, 250);
   delay(10000);
   Serial.println(F("Next..."));
 }
