@@ -127,9 +127,6 @@ const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
 const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_smooth_l_e_d_8cpp.html#ad6ad415134872eae6e12ee30e12bdc98">FLAG_PWM</a> {2}</td></tr>
 <tr class="memdesc:ad6ad415134872eae6e12ee30e12bdc98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bit mask for LED is not 0 or 1023. <br /></td></tr>
 <tr class="separator:ad6ad415134872eae6e12ee30e12bdc98"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa2e2cdda8f9aef9851c7a50310348fc"><td class="memItemLeft" align="right" valign="top">const PROGMEM uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_smooth_l_e_d_8cpp.html#aaa2e2cdda8f9aef9851c7a50310348fc">kcie</a> []</td></tr>
-<tr class="memdesc:aaa2e2cdda8f9aef9851c7a50310348fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Linear PWM brightness progression table using CIE brightness levels.  <a href="#aaa2e2cdda8f9aef9851c7a50310348fc">More...</a><br /></td></tr>
-<tr class="separator:aaa2e2cdda8f9aef9851c7a50310348fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h1><a class="anchor" id="SmoothLEDcpp_intro_section"></a>
@@ -175,24 +172,6 @@ See main library header file for details </p>
 </div><div class="memdoc">
 <p>Interrupt vector for TIMER0_COMPB</p>
 <p>Indirect call to the TimerISR()</p>
-
-</div>
-</div>
-<h2 class="groupheader">Variable Documentation</h2>
-<a id="aaa2e2cdda8f9aef9851c7a50310348fc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaa2e2cdda8f9aef9851c7a50310348fc">&#9670;&nbsp;</a></span>kcie</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const PROGMEM uint16_t kcie[]</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Linear PWM brightness progression table using CIE brightness levels. </p>
-<p>A linear progression of PWM values of 0 through to 1023 (from "off" to 100% "on") does not correspond to a linear increase in percieved brightness to the human eye. In order to make this look linear, the CIE 1931 color space and lightness formula is used. The kcie table was generated using a program written by Jared Sanson and explained on <a href="https://jared.geek.nz/2013/feb/linear-led-pwm;">https://jared.geek.nz/2013/feb/linear-led-pwm;</a> this table is 1023 X 16-bits and that is a big chunk of Atmel memory </p>
 
 </div>
 </div>

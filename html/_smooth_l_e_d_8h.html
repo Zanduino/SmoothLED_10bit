@@ -83,6 +83,7 @@ $(document).ready(function(){initNavTree('_smooth_l_e_d_8h.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#define-members">Macros</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">SmoothLED.h File Reference</div>  </div>
@@ -100,6 +101,9 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
+<tr class="memitem:aaa2e2cdda8f9aef9851c7a50310348fc"><td class="memItemLeft" align="right" valign="top">const PROGMEM uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_smooth_l_e_d_8h.html#aaa2e2cdda8f9aef9851c7a50310348fc">kcie</a> []</td></tr>
+<tr class="memdesc:aaa2e2cdda8f9aef9851c7a50310348fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Linear PWM brightness progression table using CIE brightness levels.  <a href="#aaa2e2cdda8f9aef9851c7a50310348fc">More...</a><br /></td></tr>
+<tr class="separator:aaa2e2cdda8f9aef9851c7a50310348fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc34a1153a25701c3e353dc7e2f8bf0d"><td class="memItemLeft" align="right" valign="top"><a id="afc34a1153a25701c3e353dc7e2f8bf0d"></a>
 const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_smooth_l_e_d_8h.html#afc34a1153a25701c3e353dc7e2f8bf0d">INVERT_LED</a> {true}</td></tr>
 <tr class="memdesc:afc34a1153a25701c3e353dc7e2f8bf0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Value of 0 denotes 100% duty cycle when set. <br /></td></tr>
@@ -109,6 +113,24 @@ const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href
 <tr class="memdesc:a6832f9b75dadcaa192a8e4c467fb74f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default. When value is 0 it means off. <br /></td></tr>
 <tr class="separator:a6832f9b75dadcaa192a8e4c467fb74f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="aaa2e2cdda8f9aef9851c7a50310348fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa2e2cdda8f9aef9851c7a50310348fc">&#9670;&nbsp;</a></span>kcie</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const PROGMEM uint16_t kcie[]</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Linear PWM brightness progression table using CIE brightness levels. </p>
+<p>CIE 1931 color space and PWM. Fading a LED with PWM from 1023 to 0 linearly will not result in a visually linear fade due to the way our eyes work. Setting PWM to half strength (50% duty cycle) actually looks much brighter than it should. The formula for lightness uses floating point and cubes so is not fast enough for an Arduino to compute on the fly at runtime. Hence a table is used for the lookup, but this comes at a price of 2kB of memory which is a pretty significant amount of memory for a small micro- processor. CIE mode is turned on by default in this library, but if the following "#define CIE_MODE" is commented out the library will shrink by over 2kB in size and the dimming / fading will no longer have CIE adjustments applied. The kcie table was generated using a program written by Jared Sanson and explained on <a href="https://jared.geek.nz/2013/feb/linear-led-pwm">https://jared.geek.nz/2013/feb/linear-led-pwm</a>. </p>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
