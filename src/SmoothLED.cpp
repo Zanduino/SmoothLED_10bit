@@ -7,16 +7,15 @@ See main library header file for details
 
 #include "SmoothLED.h"
 
+#include "util/atomic.h"
 const uint16_t MAX10BIT{0x3FF};   //!< 1023 decimal - biggest value for 10 bits
 const uint8_t  FLAG_INVERTED{1};  //!< Bit mask for inverted LED flag
 const uint8_t  FLAG_PWM{2};       //!< Bit mask for LED is not 0 or 1023
-const uint8_t  FLAG_FADE{4};      //!< Bit mask for LED is actively fading
 
 /*! Enumerated list for Interrupt switches */
 enum InterruptSwitches { BOTH_ON, BOTH_OFF, TIMER1_ON, TIMER1_OFF, TIMER0_ON, TIMER0_OFF };
 
 smoothLED *smoothLED::_firstLink{nullptr};  // static member declaration outside of class for init
-uint16_t   smoothLED::_counterPWM{0};  // loop 0-1023 for software PWM, incrementing on each call
 
 /***************************************************************************************************
 ** Not all of these macros are defined on all platforms, so redefine them here just in case       **
@@ -84,12 +83,8 @@ smoothLED::~smoothLED() {
            any interrupt that has been set
   */
   if (this == _firstLink) {  // remove interrupts if this is the only instance
-    cli();                   // Disable interrupts while changing values
-#if defined(OCR1AL)
-    TIMSK1 &= ~_BV(OCIE1A);  // turn off interrupt on Match A
-#endif
-    sei();                          // Re-enable interrupts after changing values
-  } else {                          // otherwise
+    setInterrupts(BOTH_OFF); // turn off both interrupts
+  } else {                                                          // otherwise
     smoothLED *p = _firstLink;      // set pointer to first link in order to traverse list
     while (p->_nextLink != this) {  // loop until we get to next-to-last link in list
       p = p->_nextLink;             // increment to next element
@@ -194,8 +189,8 @@ bool smoothLED::begin(const uint8_t pin, const bool invert) {
   volatile uint8_t *ddr = portModeRegister(digitalPinToPort(pin));  // get DDRn port for pin
   *ddr |= _registerBitMask;                                         // make the pin an output
   hertz(30);                                                        // Start off with 30Hz
-  set(0);                                                           // Turn off pin
-  return true;                                                      // Return success
+  set(0);                                                         // Turn off pin
+  return true;  // Return success
 }  // of function "begin()"
 void smoothLED::pinOn() const {
   /*!
@@ -205,7 +200,7 @@ void smoothLED::pinOn() const {
            the pin to 1
   @return  void returns nothing
 */
-  if (_flags | FLAG_INVERTED) {
+  if (_flags & FLAG_INVERTED) {
     *_portRegister &= ~_registerBitMask;
   } else {
     *_portRegister |= _registerBitMask;
@@ -219,7 +214,7 @@ void smoothLED::pinOff() const {
              write to set  the pin to 0
     @return  void returns nothing
   */
-  if (_flags | FLAG_INVERTED) {
+  if (_flags & FLAG_INVERTED) {
     *_portRegister |= _registerBitMask;
   } else {
     *_portRegister &= ~_registerBitMask;
@@ -237,60 +232,61 @@ void smoothLED::setInterrupts(const uint8_t mode) {
            changing of LED PWM values, can also be switched off when not needed.
            Setting a new PWM value with "set()" restarts these timers when needed.
   */
-  cli();  // Disable interrupts while changing values
-  if ((mode == BOTH_ON || mode == TIMER0_ON) && (TIMSK0 & _BV(OCIE0A)) == 0) {
-    /***********************************************************************************************
-     ** TIMER0 is used by the Arduino system for timing. Set OCR0A and OCR0B so that they also    **
-     ** trigger an interrupt. Each triggers once a millisecond, so with both defined we get an    **
-     ** interrupt rate of 2000Hz for fading.                                                      **
-     **********************************************************************************************/
-    OCR0A = 0x40;  // Comparison register A to 64
-    OCR0B = 0xC0;  // Comparison register B to 192
+  ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+    if (mode == BOTH_ON || mode == TIMER0_ON) {
+      /*********************************************************************************************
+       ** TIMER0 is used by the Arduino system for timing. Set OCR0A and OCR0B so that they also  **
+       ** trigger an interrupt. Each triggers once a millisecond, so with both defined we get an  **
+       ** interrupt rate of 2000Hz for fading.                                                    **
+       ********************************************************************************************/
+      OCR0A = 0x40;  // Comparison register A to 64
+      OCR0B = 0xC0;  // Comparison register B to 192
 #if defined(TIMSK0)
-    TIMSK0 |= _BV(OCIE0A);
-    TIMSK0 |= _BV(OCIE0B);
+      TIMSK0 |= _BV(OCIE0A);
+      TIMSK0 |= _BV(OCIE0B);
 #elif defined(TIMSK)
-    TIMSK |= _BV(OCIE0A);
-    TIMSK |= _BV(OCIE0B);
+      TIMSK |= _BV(OCIE0A);
+      TIMSK |= _BV(OCIE0B);
 #else
 #error Neither TIMSK (ATtiny) nor TIMSK0 defined on this platform
 #endif
-  }  // if-then turn on TIMER0
+    }  // if-then turn on TIMER0
 
-  if ((mode == BOTH_OFF || mode == TIMER0_OFF) && (TIMSK0 & _BV(OCIE0A)) != 0) {
+    if (mode == BOTH_OFF || mode == TIMER0_OFF) {
 #if defined(TIMSK0)
-    TIMSK0 &= ~_BV(OCIE0A);  // TIMER0_COMPA trigger on 0x01
-    TIMSK0 &= ~_BV(OCIE0B);  // TIMER0_COMPB trigger on 0x80
+      TIMSK0 &= ~_BV(OCIE0A);  // TIMER0_COMPA trigger on 0x01
+      TIMSK0 &= ~_BV(OCIE0B);  // TIMER0_COMPB trigger on 0x80
 #elif defined(TIMSK)
-    TIMSK &= ~_BV(OCIE0A);  // TIMER0_COMPA trigger on 0x01 (ATtiny25-45-85)
-    TIMSK &= ~_BV(OCIE0B);  // TIMER0_COMPB trigger on 0x80
+      TIMSK &= ~_BV(OCIE0A);  // TIMER0_COMPA trigger on 0x01 (ATtiny25-45-85)
+      TIMSK &= ~_BV(OCIE0B);  // TIMER0_COMPB trigger on 0x80
 #endif
-  }  // if-then turn off TIMER0
+    }  // if-then turn off TIMER0
 
-  if ((mode == BOTH_ON || mode == TIMER1_ON) && (TIMSK1 & _BV(OCIE1A)) == 0) {
-    /***********************************************************************************************
-     ** The Arduino IDE resets TIMER{n} values, and if the instances of this class are defined    **
-     ** globally then any TIMER{n} setup information gets lost, so overwrite the values here.     **
-     **********************************************************************************************/
-    _counterPWM = 0;  // reset internal counter
+    if (mode == BOTH_ON || mode == TIMER1_ON) {
+      /*********************************************************************************************
+       ** The Arduino IDE resets TIMER{n} values, and if the instances of this class are defined  **
+       ** globally then any TIMER{n} setup information gets lost, so overwrite the values here.   **
+       ********************************************************************************************/
 #if defined(OCR1AL)
-    TCCR1B = 0;             // Clear Timer 1 Control Register B
-    sbi(TCCR1B, CS10);      // Set 3 "Clock Select" bits to no pre-scaling
-    cbi(TCCR1B, CS11);      // That is Bit 0 is "ON", bit 1 is "OFF",
-    cbi(TCCR1B, CS12);      // and bit 2 is "OFF"
-    cbi(TCCR1A, WGM10);     // Set "Wave Generation Mode" bits to mode 4: CTC
-    cbi(TCCR1A, WGM11);     // Only WGM12 is set, the others are off. The
-    sbi(TCCR1B, WGM12);     // interrupt is triggered and the counter is reset
-    cbi(TCCR1B, WGM13);     // when the value in OCR1A is matched
-    TIMSK1 |= _BV(OCIE1A);  // Set interrupt on Match A for TIMER1
+      TCCR1B = 0;             // Clear Timer 1 Control Register B
+      sbi(TCCR1B, CS10);      // Set 3 "Clock Select" bits to no pre-scaling
+      cbi(TCCR1B, CS11);      // That is Bit 0 is "ON", bit 1 is "OFF",
+      cbi(TCCR1B, CS12);      // and bit 2 is "OFF"
+      cbi(TCCR1A, WGM10);     // Set "Wave Generation Mode" bits to mode 4: CTC
+      cbi(TCCR1A, WGM11);     // Only WGM12 is set, the others are off. The
+      sbi(TCCR1B, WGM12);     // interrupt is triggered and the counter is reset
+      cbi(TCCR1B, WGM13);     // when the value in OCR1A is matched
+      TIMSK1 |= _BV(OCIE1A);  // Set interrupt on Match A for TIMER1
 #else
 #error TIMER not yet defined for this microprocessor
 #endif
-  }  // if-then turn on TIMER1
-  if ((mode == BOTH_OFF || mode == TIMER1_OFF) && (TIMSK1 & _BV(OCIE1A)) != 0) {
-    TIMSK1 &= ~_BV(OCIE1A);  // Unset interrupt on Match A
-  }                          // if-then turn off TIMER1
-  sei();                     // Re-enable interrupts after changing values
+    }  // if-then turn on TIMER1
+
+    if (mode == BOTH_OFF || mode == TIMER1_OFF) {
+      TIMSK1 &= ~_BV(OCIE1A);  // Unset interrupt on Match A
+    }                          // if-then turn off TIMER1
+
+  } // of atomic block
 }  // of function "setInterrupts()"
 void smoothLED::hertz(const uint8_t hertz) const {
   /*!
@@ -302,10 +298,12 @@ void smoothLED::hertz(const uint8_t hertz) const {
            so high that there are no CPU cycles left to process the main program.
 @param[in] hertz    Unsigned integer Hertz setting for LED PWM
 */
+  ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
 #if defined(OCR1AL)
-  OCR1A = static_cast<uint16_t>(
-      (F_CPU / static_cast<unsigned long>(1023) / static_cast<unsigned long>(hertz)) - 1);
+    OCR1A = static_cast<uint16_t>(
+        (F_CPU / static_cast<unsigned long>(1023) / static_cast<unsigned long>(hertz)) - 1);
 #endif
+  }  // atomic block for interrupts
 }  // of function "hertz()"
 void smoothLED::set(const uint16_t &val, const uint8_t speed) {
   /*!
@@ -316,39 +314,38 @@ void smoothLED::set(const uint16_t &val, const uint8_t speed) {
   @param[in] val    The value 0-1023 to set the LED. Defaults to 0 (OFF)
   @param[in] speed  The rate of change from 0 (immediate) 1 - slow to 255 - fast. Defaults to 0
 */
-  cli();                             // Disable interrupts while changing volatile variables
-  _flags |= FLAG_PWM;                // Enable PWM for the pin by default
-  if (speed == 0) {                  // If we just set a value
-    _flags &= ~FLAG_FADE;            // Set flag to no fade
-    _currentLevel = val & MAX10BIT;  // set current to value and clamp
+  ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {  // disable interrupts in block
+    _flags |= FLAG_PWM;                // Enable PWM for the pin by default
+    if (speed == 0) {                  // If we just set a value
+      _currentLevel = val & MAX10BIT;  // set current to value and clamp to range
 #ifdef CIE_MODE
-    _currentCIE = pgm_read_word(kcie + _currentLevel);
+      _currentCIE = pgm_read_word(kcie + _currentLevel);
 #else
-    _currentCIE = _currentLevel;
-#endif _targetLevel = _currentLevel;  // and set target to value as well
-    _changeSpeed = 0;                   // change speed is not used
-    if (_currentLevel == 0) {           // if PWM on and value is OFF
-      _flags &= ~FLAG_PWM;              // turn off PWM flag
-      pinOff();                         // turn off pin
-    } else {                            // otherwise
-      if (_currentLevel == MAX10BIT) {  // if PWM on and value is ON
-        _flags &= ~FLAG_PWM;            // turn off PWM flag
-        pinOn();                        // turn off pin
-      }                                 // if-then ON
-    }                                   // if-then-else OFF
-  } else {                              // otherwise we have a change
-    _flags |= FLAG_FADE;                // Set flag to fade active
-    _targetLevel  = val & MAX10BIT;     // just set a new target and clamp
-    _changeSpeed  = speed;              // and set a change rate
-    _changeTicker = speed;              // and set the ticker variable
-  }                                     // if-then-else immediate
-  if (_flags & FLAG_PWM) {              // If PWM is needed, then
-    setInterrupts(TIMER1_ON);           // turn on interrupts for PWM
-  }                                     // if-then PWM needed
-  if (_flags & FLAG_FADE) {             // If PWM is needed, then
-    setInterrupts(TIMER0_ON);           // turn on interrupts for PWM
-  }                                     // if-then PWM needed
-  sei();                                // Re-enable interrupts after changing values
+      _currentCIE = _currentLevel;
+#endif
+      _targetLevel = _currentLevel;       // and set target to value as well
+      _changeSpeed = 0;                   // change speed is not used
+      if (_currentLevel == 0) {           // if PWM on and value is OFF
+        _flags &= ~FLAG_PWM;              // turn off PWM flag
+        pinOff();                         // turn off pin
+      } else {                            // otherwise
+        if (_currentLevel == MAX10BIT) {  // if PWM on and value is ON
+          _flags &= ~FLAG_PWM;            // turn off PWM flag
+          pinOn();                        // turn off pin
+        }                                 // if-then ON
+      }                                   // if-then-else OFF
+    } else {                              // otherwise we have a change
+      _targetLevel  = val & MAX10BIT;     // just set a new target and clamp
+      _changeSpeed  = speed;              // and set a change rate
+      _changeTicker = speed;              // and set the ticker variable
+      Serial.print("delta is ");
+      Serial.println((int16_t)_currentLevel - (int16_t)_targetLevel);
+      setInterrupts(BOTH_ON);  // turn on interrupts for fading
+    }                            // if-then-else immediate
+    if (_flags & FLAG_PWM) {     // If PWM is needed, then
+      setInterrupts(TIMER1_ON);  // turn on interrupts for PWM
+    }                            // if-then PWM needed
+  }                              // of atomic block
 }  // of function "set()"
 void smoothLED::pwmISR() {
   /*!
@@ -362,22 +359,31 @@ void smoothLED::pwmISR() {
              This function iterates through all the instances of the smoothLED class and sets each
              pin ON or OFF for the appropriate number of cycles.
   */
-  smoothLED *p = _firstLink;               // Set ptr to start of linked list of class instances
-  while (p != nullptr) {                   // Loop through linked list of all class instances
-    if (p->_portRegister != nullptr) {     // Skip processing if the pin is not initialized
+  static uint16_t _counterPWM;  //!< loop counter 0-1023 for software PWM
+  smoothLED *p = _firstLink;                // Set ptr to start of linked list of class instances
+  while (p != nullptr) {                    // Loop through linked list of all class instances
+    if (p->_portRegister != nullptr) {      // Skip processing if the pin is not initialized
       if (p->_currentCIE == _counterPWM) {  // If we've reached the PWM threshold
-        p->pinOff();                       // turn pin off
-      } else {                             // otherwise
+        p->pinOff();                        // turn pin off
+      } else {                              // otherwise
         if (_counterPWM == 0) {             // if we've rolled over and are at start,
-          p->pinOn();                      // turn the pin on
-        }                                  // if-then turn ON LED
-      }                                    // if-then-else turn off LED
-    }                                      // if then a valid pin
-    p = p->_nextLink;                      // go to next class instance
-  }                                        // of while loop to traverse  list
+          p->pinOn();                       // turn the pin on
+        }                                   // if-then turn ON LED
+      }                                     // if-then-else turn off LED
+    }                                       // if then a valid pin
+    p = p->_nextLink;                       // go to next class instance
+  }                                         // of while loop to traverse  list
   ++_counterPWM &= MAX10BIT;                // Pre-increment and clamp to range 0 - 1023
 }  // of function "pwmISR()"
 void smoothLED::faderISR() {
+  static uint8_t x = 0;
+  if (++x = 10) {
+    digitalWrite(3, !digitalRead(3));
+    x = 0;
+  }
+
+
+  //Serial.print("F");
   /*!
     @brief   Performs fading PWM functions
     @details While the "pwmISR()" needs to be called very frequently in order to perform PWM on the
@@ -391,9 +397,9 @@ void smoothLED::faderISR() {
   smoothLED *p = _firstLink;                    // set ptr to first link for loop
   bool       noPWM{true};                       // Turned off if any pin uses PWM
   bool       noFADE{true};                      // Turned off if any pin uses fading
-  while (p != nullptr) {                        // loop through all class instances
+  while (p != nullptr) {  // loop through all class instances
+//    Serial.print("+");
     if (p->_currentLevel == p->_targetLevel) {  // if we have a static PWM value
-      p->_flags &= ~FLAG_FADE;                  // Unset fade flag for no active fading
       /*********************************************************************************************
       ** If the PWM is static and either OFF or ON, then set the value and the FLAG_PWM bit so    **
       ** the ISR doesn't need to process it.                                                      **
@@ -408,16 +414,16 @@ void smoothLED::faderISR() {
         }
       }  // if-then-else PWM and OFF
     } else {
-      noFADE = false;  // we have a fading LED
+      noFADE = false;  // we have at least one fading LED
       /*********************************************************************************************
       ** Perform the dynamic PWM change at the appropriate speed                                  **
       *********************************************************************************************/
-      if (p->_currentLevel != p->_targetLevel && ++p->_changeTicker == 0) {
+      if (++p->_changeTicker == 0) {
         p->_changeTicker = p->_changeSpeed;        // then reset counter
         if (p->_currentLevel > p->_targetLevel) {  // choose direction
           --p->_currentLevel;                      // current > target
         } else {                                   // otherwise
-          ++p->_currentLevel;                      // current < target
+          ++p->_currentLevel;  // current < target
         }                                          // if-then-else get dimmer
 #ifdef CIE_MODE
         p->_currentCIE = pgm_read_word(kcie + p->_currentLevel);
