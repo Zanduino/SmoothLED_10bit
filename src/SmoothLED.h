@@ -65,6 +65,8 @@ Written by Arnd <Arnd@Zanduino.Com> at https://www.github.com/SV-Zanshin
 #include <WProgram.h>
 #endif
 
+#define CIE_MODE
+#ifdef CIE_MODE
 /*! @brief   Linear PWM brightness progression table using CIE brightness levels
     @details CIE 1931 color space and PWM. Fading a LED with PWM from 1023 to 0 linearly will not
              result in a visually linear fade due to the way our eyes work. Setting PWM to half
@@ -77,8 +79,6 @@ Written by Arnd <Arnd@Zanduino.Com> at https://www.github.com/SV-Zanshin
              dimming / fading will no longer have CIE adjustments applied.
              The kcie table was generated using a program written by Jared Sanson and explained on
              https://jared.geek.nz/2013/feb/linear-led-pwm. */
-#define CIE_MODE
-#ifdef CIE_MODE
 const PROGMEM uint16_t kcie[] = {
     0,    0,    0,    0,   0,   1,   1,   1,   1,   1,   1,   1,    1,    1,    2,    2,    2,
     2,    2,    2,    2,   2,   2,   3,   3,   3,   3,   3,   3,    3,    3,    3,    4,    4,

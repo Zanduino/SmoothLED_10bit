@@ -395,9 +395,9 @@ void smoothLED::faderISR() {
           ++p->_currentLevel;                      // current < target
         }                                          // if-then-else get dimmer
 #ifdef CIE_MODE
-        p->_currentCIE = pgm_read_word(kcie + p->_currentLevel);  // set new cie value
+        p->_currentCIE = pgm_read_word(kcie + p->_currentLevel);
 #else
-        p->_currentCIE = p->_currentLevel;                        // not using cie, use current
+        p->_currentCIE = p->_currentLevel;
 #endif
       }                                       // if-then  change current value
     }                                         // if-then-else no change in PWM
