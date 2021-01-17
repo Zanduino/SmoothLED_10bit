@@ -467,7 +467,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>sets the LED</p>
-<p>This function does not actually set the LED, it just writes the corresponding parameter values to the instance variables. The setting of the pin state is done in the "pwmISR()" function which is called by the interrupt triggered byt the timer. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>This function does not actually set the pin, it just writes the corresponding parameter values to the instance variables. The setting of the pin state is done in the "pwmISR()" function which is called by the interrupt triggered by the timer. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">val</td><td>The value 0-1023 to set the LED. Defaults to 0 (OFF) </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">speed</td><td>The rate of change from 0 (immediate) 1 - slow to 255 - fast. Defaults to 0</td></tr>
