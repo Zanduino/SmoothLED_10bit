@@ -52,6 +52,7 @@ Written by Arnd <Arnd@Zanduino.Com> at https://www.github.com/SV-Zanshin
 
 | Version| Date       | Developer  | Comments                                                      |
 | ------ | ---------- | ---------- | ------------------------------------------------------------- |
+| 1.0.0  | 2021-01-17 | SV-Zanshin | Added disabling interrupts when not needed & CIE-Mode disable |
 | 1.0.0  | 2021-01-15 | SV-Zanshin | Optimized instantiation and completed coding and testing      |
 | 1.0.0  | 2021-01-10 | SV-Zanshin | Created new library for the class                             |
 */
@@ -178,7 +179,7 @@ class smoothLED {
                   const uint8_t   speed = 0);       // optional change speed
  private:                                         // declare the private class members
   static smoothLED* _firstLink;                   //!< Static pointer to first instance in list
-  static uint16_t   counterPWM;                   //!< loop counter 0-1023 for software PWM
+  static uint16_t   _counterPWM;                  //!< loop counter 0-1023 for software PWM
   volatile uint8_t* _portRegister{nullptr};       //!< Pointer to the actual PORT{n} Register
   smoothLED*        _nextLink{nullptr};           //!< Pointer to the next instance in  list
   uint8_t           _registerBitMask{0};          //!< bit mask for the bit used in PORT{n}
@@ -187,9 +188,9 @@ class smoothLED {
   uint16_t          _targetLevel{0};              //!< Target PWM level 0-1023
   uint8_t           _changeSpeed{0};              //!< Speed at which fading happens 0-255
   uint8_t           _changeTicker{0};             //!< Countdown in ticks used for fading
-  uint8_t           _flags{0};                    //!< Status bits, see cpp for details
+  volatile uint8_t  _flags{0};                    //!< Status bits, see cpp fiel for details
+  static void       setInterrupts(const uint8_t mode);              // Turn interrupts on or off
   inline void       pinOn() const __attribute__((always_inline));   // Turn LED on
   inline void       pinOff() const __attribute__((always_inline));  // Turn LED off
-  static void       setInterrupts(const bool status);               // Turn interrupts on or off
-};  // of class smoothLED                                           //
+};                                                                  // of class smoothLED
 #endif
