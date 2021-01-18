@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['flag_5ffade',['FLAG_FADE',['../_smooth_l_e_d_8cpp.html#a1e896921872c22e02aa6a1ef78acabce',1,'SmoothLED.cpp']]],
-  ['flag_5finverted',['FLAG_INVERTED',['../_smooth_l_e_d_8cpp.html#a4bd1ffe5e3b9c2e05f3a51fe1fc55993',1,'SmoothLED.cpp']]],
-  ['flag_5fpwm',['FLAG_PWM',['../_smooth_l_e_d_8cpp.html#ad6ad415134872eae6e12ee30e12bdc98',1,'SmoothLED.cpp']]]
+  ['board',['Board',['../_builtin___l_e_d___demo_8ino.html#aef206174e91bbd9d93e5dab9e210a0de',1,'Builtin_LED_Demo.ino']]]
 ];

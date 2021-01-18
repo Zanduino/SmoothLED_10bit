@@ -157,7 +157,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Class constructor</p>
-<p>There can be many instances of this class, as many as one per pin. Instead of pre- allocating storage we'll create a linked list (with just forward-pointers) to the list of instances. The interrupt routine needs to use this list to iterate through all instances and perform the appropriate PWM actions. The first instantiation will enable the interrupts and ISR for OCR0A and OCR0B</p>
+<p>There can be many instances of this class, as many as one per pin. Instead of pre- allocating storage we'll create a linked list (with just forward-pointers) to the list of instances. The interrupt routine needs to use this list to iterate through all instances and perform the appropriate PWM actions. The first instantiation will enable the interrupts and ISR for OCR0A and OCR0B which is used to fade the LEDs</p>
 
 </div>
 </div>
@@ -207,7 +207,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Initializes the LED</p>
-<p>The function returns an error (false) if a pin doesn't exist, or the pin has already been defined. The pin is made an output pin and the register address for the PORT number and bitmask are stored with the class instance along with flag on whether the LED is inverted (where 0 denotes full ON and 1023 means OFF); as LEDs can be attached to the pin in either direction. The TIMER is set to no prescaling and the mode is set to CTC. This is done here, rather than in the class constructor, since the Arduino IDE overwrites the timing registers and the class is typically constructed before the setup() call. Although each instance sets these values, they apply globally to all instances of the class. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>The function returns an error (false) if a pin doesn't exist, or the pin has already been defined. The pin is made an output pin and the register address for the PORT number and bitmask are stored with the class instance along with flag on whether the LED is inverted (where 0 denotes full ON and 1023 means OFF); as LEDs can be attached to the pin in either direction. The TIMER is set to no prescaling and the mode is set to CTC. This is done here, rather than in the class constructor, since the Arduino IDE overwrites the timing registers and the class is typically constructed before the <a class="el" href="_builtin___l_e_d___demo_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">setup()</a> call. Although each instance sets these values, they apply globally to all instances of the class. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">pin</td><td>The Arduino pin number of the LED </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">invert</td><td>Boolean - when false then a value of "0" represents "OFF" and the max value represent "ON". Some LEDs are hooked up differently with and the values are reversed </td></tr>
@@ -438,6 +438,7 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Function to actually perform the PWM on all pins</p>
 <p>This function is the interrupt handler for TIMER1_COMPA and performs the PWM turning ON and OFF of all the pins defined in the instances of the class. It is called very often and therefore needs to be as compact as possible. If the LED is set to 30Hz then this ISR is call 30*1023 = 30690 times a second, or every 32.5 microseconds. At 16MHz the microprocessor only executes 16 instructions per microsecond so it is really important to minimize time spent here. This function iterates through all the instances of the <a class="el" href="classsmooth_l_e_d.html" title="Class to allow PWM pins to be used with 10-bit PWM regardless of which timer they are attached to...">smoothLED</a> class and sets each pin ON or OFF for the appropriate number of cycles.</p>
+<p>&lt; loop counter 0-1023 for software PWM </p>
 
 </div>
 </div>

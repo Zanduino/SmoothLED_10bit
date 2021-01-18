@@ -3,17 +3,8 @@ var _smooth_l_e_d_8cpp =
     [ "_BV", "_smooth_l_e_d_8cpp.html#a11643f271076024c395a93800b3d9546", null ],
     [ "cbi", "_smooth_l_e_d_8cpp.html#ae70baf5399951da1e7ad45a0ed890832", null ],
     [ "sbi", "_smooth_l_e_d_8cpp.html#ac4a5536d9bf092116f88b94797ddc882", null ],
-    [ "InterruptSwitches", "_smooth_l_e_d_8cpp.html#a3ae68147f1d872270f0891bf8acef20a", [
-      [ "BOTH_ON", "_smooth_l_e_d_8cpp.html#a3ae68147f1d872270f0891bf8acef20aaeec4f42386e38267b8ecc1394619e582", null ],
-      [ "BOTH_OFF", "_smooth_l_e_d_8cpp.html#a3ae68147f1d872270f0891bf8acef20aa3450036020a6bdab6d43f8bd43d27bcb", null ],
-      [ "TIMER1_ON", "_smooth_l_e_d_8cpp.html#a3ae68147f1d872270f0891bf8acef20aa1c34c4cfdf1e8d584819359d5db53623", null ],
-      [ "TIMER1_OFF", "_smooth_l_e_d_8cpp.html#a3ae68147f1d872270f0891bf8acef20aa90a03d1133fa1f91cae2aacfe17b1355", null ],
-      [ "TIMER0_ON", "_smooth_l_e_d_8cpp.html#a3ae68147f1d872270f0891bf8acef20aa40d9f489bf848933b3d155fd587924a9", null ],
-      [ "TIMER0_OFF", "_smooth_l_e_d_8cpp.html#a3ae68147f1d872270f0891bf8acef20aa45d1b6686d8ed6f910be9b75219c3717", null ]
-    ] ],
     [ "ISR", "_smooth_l_e_d_8cpp.html#aec43762dc86e029b395d4e5819192c2d", null ],
     [ "ISR", "_smooth_l_e_d_8cpp.html#aa513bd38a02761593d0217c8497033ac", null ],
-    [ "FLAG_FADE", "_smooth_l_e_d_8cpp.html#a1e896921872c22e02aa6a1ef78acabce", null ],
     [ "FLAG_INVERTED", "_smooth_l_e_d_8cpp.html#a4bd1ffe5e3b9c2e05f3a51fe1fc55993", null ],
     [ "FLAG_PWM", "_smooth_l_e_d_8cpp.html#ad6ad415134872eae6e12ee30e12bdc98", null ],
     [ "MAX10BIT", "_smooth_l_e_d_8cpp.html#a2340e28adcfde72281e382a92568d173", null ]
