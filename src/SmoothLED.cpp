@@ -414,7 +414,7 @@ void smoothLED::faderISR() {
   }                                           // of while loop to traverse  list
   /*************************************************************************************************
   ** If no pins in our class instances are using PWM,  then we can save lots of CPU cycles by     **
-  ** disabling the TIMER1 interrupt that we are using. Interrupts are re-enabled in "set()"       **
+  ** disabling the TIMER1 interrupt. Interrupts are re-enabled in the "set()" function            **
   *************************************************************************************************/
   if (noPWM) {               // If no pins are using PWM
     TIMSK1 &= ~_BV(OCIE1A);  // Unset interrupt on Match A
