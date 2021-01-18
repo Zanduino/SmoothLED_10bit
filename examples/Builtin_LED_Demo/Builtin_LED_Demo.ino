@@ -33,7 +33,7 @@ Written by Arnd <Arnd@Zanduino.Com> at https://www.github.com/SV-Zanshin
 #error This library and program is designed for Atmel ATMega processors
 #endif
 
-smoothLED            Board;
+smoothLED Board;  //!< instanc of smoothLED pointing to the builtin LED
 
 void setup() {
   /*!
@@ -63,15 +63,19 @@ void setup() {
   *************************************************************************************************/
   Serial.println("Test 1 - manually fading the LED");
   for (uint16_t i = 1023; i != 0; i--) {
-    Board.set(i); // set the pin to the PWM value
-    delay(50); // wait a bit
-  } // for-next manual dimming
+    Board.set(i);  // set the pin to the PWM value
+    delay(10);     // wait a bit
+  }                // for-next manual dimming
   Serial.println("Test 2 - fading the LED using the library");
-  Board.set(1023); // set full on
-  Board.set(0, 250); // fade to 0 at a slow rate
+  Board.set(1023);    // set full on
+  Board.set(0, 250);  // fade to 0 at a slow rate
   Serial.println("Program continues, fade happens in the background");
-  while (1)
-    ;
+
+  /* example loop - while this is running the onboard LED slowly fades away, independant of this. */
+  for (uint8_t i = 0; i < 100; ++i) {
+    Serial.print("*");
+    delay(500);
+  }  // for next-loop
 
 }  // of method "setup()"
 
@@ -82,6 +86,6 @@ void loop() {
       @return   void
   */
   Board.set(0);          // set off
-  Board.set(1023, 200);  // fade to 0 at a slow rate
+  Board.set(1023, 100);  // fade to 0 at a slow rate
   delay(15000);
 }  // of method "loop()"
