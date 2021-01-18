@@ -185,10 +185,9 @@ class smoothLED {
   volatile uint16_t _currentLevel{0};             //!< Current PWM level 0-1023
   volatile uint16_t _currentCIE{0};               //!< Current PWM level from cie table
   uint16_t          _targetLevel{0};              //!< Target PWM level 0-1023
-  volatile uint8_t  _changeSpeed{0};              //!< Speed at which fading happens 0-255
-  volatile uint8_t           _changeTicker{0};             //!< Countdown in ticks used for fading
+  uint8_t           _changeSpeed{0};              //!< Speed at which fading happens 0-255
+  volatile uint8_t  _changeTicker{0};             //!< Countdown in ticks used for fading
   volatile uint8_t  _flags{0};                    //!< Status bits, see cpp fiel for details
-  static void       setInterrupts(const uint8_t mode);              // Turn interrupts on or off
   inline void       pinOn() const __attribute__((always_inline));   // Turn LED on
   inline void       pinOff() const __attribute__((always_inline));  // Turn LED off
 };                                                                  // of class smoothLED
