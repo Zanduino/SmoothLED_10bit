@@ -169,11 +169,12 @@ smoothLED &smoothLED::operator-=(const int16_t &value) {
 smoothLED &smoothLED::operator=(const smoothLED &value) {
   /*!
   @brief   = Overload
-  @details The "=" operator sets the LED value of _currentLevel, _targetLevel and _changeSpeed
+  @details The "=" operator sets the LED values
 */
   this->_currentLevel = value._currentLevel;
   this->_targetLevel  = value._targetLevel;
-  this->_changeSpeed  = value._changeSpeed;
+  this->_changeDelays = value._changeDelays;
+  this->_changeTicker = value._changeTicker;
   return *this;
 }
 bool smoothLED::begin(const uint8_t pin, const bool invert) {
@@ -288,7 +289,7 @@ void smoothLED::hertz(const uint8_t hertz) const {
 #endif
   }  // atomic block for interrupts
 }  // of function "hertz()"
-void smoothLED::set(const uint16_t &val, const uint8_t speed) {
+void smoothLED::set(const uint16_t &val, const uint16_t &speed) {
   /*!
   @brief     sets the LED
   @details   This function does not actually set the pin, it just writes the corresponding parameter
@@ -306,8 +307,8 @@ void smoothLED::set(const uint16_t &val, const uint8_t speed) {
 #else
       _currentCIE = _currentLevel;
 #endif
-      _targetLevel = _currentLevel;     // and set target to value as well
-      _changeSpeed = 0;                 // change speed is not used
+      _targetLevel  = _currentLevel;    // and set target to value as well
+      _changeDelays = 0;                // change speed is not used
       if (_currentCIE == 0) {           // if PWM on and value is OFF
         _flags &= ~FLAG_PWM;            // turn off PWM flag
         pinOff();                       // turn off pin
@@ -318,13 +319,28 @@ void smoothLED::set(const uint16_t &val, const uint8_t speed) {
         }                               // if-then ON
       }                                 // if-then-else OFF
     } else {                            // otherwise we have a change
-      _targetLevel  = val & MAX10BIT;   // just set a new target and clamp
-      _changeSpeed  = speed;            // and set a change rate
-      _changeTicker = speed;            // and set the ticker variable
-      Serial.print("delta is ");
-      Serial.println((int16_t)_currentLevel - (int16_t)_targetLevel);
-    }                         // if-then-else immediate
-    if (_flags & FLAG_PWM) {  // If PWM is needed, then
+      _targetLevel = val & MAX10BIT;    // just set a new target and clamp
+      /*********************************************************************************************
+      ** The interrupt fires 2000 times per second. If the fading/brightening happens at the      **
+      ** maximum range (from 0 to 1023) at the fastest speed of 1 level per call, then we have a  **
+      ** top speed of 500ms. Compute the number of delay cycles into "_changeDelays" multiplied by**
+      ** 100, i.e. for the example above: speed 500 * 2 * 100 / delta = 97 (rounded to integer).  **
+      ** The "_changeTicker" is set to the this value as well. In the fade handler the            **
+      ** "changeTicker" is decremented by 100 each iteration until it is equal to or less than 0, **
+      ** whereupon the brightness value is changed and the "_changeTicker" is reset.              **
+      *********************************************************************************************/
+      uint32_t temp = (_currentLevel > _targetLevel) ? _currentLevel - _targetLevel
+                                                     : _targetLevel - _currentLevel;
+      temp          = ((uint32_t)speed * 2 * 100) / temp;  // compute the delay factor
+      if (temp > UINT16_MAX) {                             // if the value is bigger than fits
+        temp = UINT16_MAX;                                 // clamp it to range,
+      } else if (temp < 101) {                             // and if it is less than minimum
+        temp = 100;                                        // then set it to minimum
+      }                                                    // if-then-else out of range
+      _changeDelays = static_cast<uint16_t>(temp);         // Set the value, knowing it is in range
+      _changeTicker = _changeDelays;  // and set the ticker variable to that value
+    }                                 // if-then-else immediate
+    if (_flags & FLAG_PWM) {          // If PWM is needed, then
 #if defined(OCR1AL)
       TIMSK1 |= _BV(OCIE1A);  // Set interrupt on Match A for TIMER1
 #else
@@ -394,8 +410,9 @@ void smoothLED::faderISR() {
         /*******************************************************************************************
         ** Perform the dynamic PWM change at the appropriate speed                                **
         *******************************************************************************************/
-        if (++p->_changeTicker == 0) {
-          p->_changeTicker = p->_changeSpeed;        // then reset counter
+        p->_changeTicker -= 100;
+        if (p->_changeTicker <= 0) {
+          p->_changeTicker += p->_changeDelays;      // add delay factor to ticker
           if (p->_currentLevel > p->_targetLevel) {  // choose direction
             --p->_currentLevel;                      // current > target
           } else {                                   // otherwise

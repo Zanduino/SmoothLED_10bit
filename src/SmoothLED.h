@@ -56,8 +56,6 @@ Written by Arnd <Arnd@Zanduino.Com> at https://www.github.com/SV-Zanshin
 | 1.0.0  | 2021-01-17 | SV-Zanshin | Added disabling interrupts when not needed & CIE-Mode disable |
 | 1.0.0  | 2021-01-15 | SV-Zanshin | Optimized instantiation and completed coding and testing      |
 | 1.0.0  | 2021-01-10 | SV-Zanshin | Created new library for the class                             |
-| ------ | ---------- | ---------- | ------------------------------------------------------------- |
-
 */
 
 #ifndef _smoothLED_h
@@ -156,8 +154,7 @@ const bool NO_INVERT_LED{false};  //!< Default. When value is 0 it means off
 class smoothLED {
   /*!
     @class   smoothLED
-    @brief   Class to allow PWM pins to be used with 10-bit PWM regardless of which timer they are
-             attached to
+    @brief   Class to allow any pins to be used with 10-bit PWM
   */
  public:                                          // Declare all publicly visible members
   smoothLED();                                    // Class constructor
@@ -174,12 +171,12 @@ class smoothLED {
   smoothLED&  operator+(const int16_t& value);    // addition overload
   smoothLED&  operator-(const int16_t& value);    // subtraction overload
   bool        begin(const uint8_t pin,            // Initialize a pin for PWM
-                    const bool    invert = false);   // optional invert values
+                    const bool    invert = false);   // optionally invert values
   void        hertz(const uint8_t hertz) const;   // Set hertz rate for PWM
   static void pwmISR();                           // Actual PWM function
   static void faderISR();                         // Actual fader function
   void        set(const uint16_t& val,            // Set a pin's value
-                  const uint8_t   speed = 0);       // optional change speed
+                  const uint16_t& speed = 0);     // optional change speed in milliseconds
  private:                                         // declare the private class members
   static smoothLED* _firstLink;                   //!< Static pointer to first instance in list
   volatile uint8_t* _portRegister{nullptr};       //!< Pointer to the actual PORT{n} Register
@@ -188,10 +185,10 @@ class smoothLED {
   volatile uint16_t _currentLevel{0};             //!< Current PWM level 0-1023
   volatile uint16_t _currentCIE{0};               //!< Current PWM level from cie table
   uint16_t          _targetLevel{0};              //!< Target PWM level 0-1023
-  uint8_t           _changeSpeed{0};              //!< Speed at which fading happens 0-255
-  volatile uint8_t  _changeTicker{0};             //!< Countdown in ticks used for fading
-  volatile uint8_t  _flags{0};                    //!< Status bits, see cpp fiel for details
+  volatile uint8_t  _flags{0};                    //!< Status bits, see cpp file for details
+  uint16_t          _changeDelays{0};             //!< Variable storing delay time for fades
+  volatile int16_t  _changeTicker{0};             //!< Countdown timer used in fading
   inline void       pinOn() const __attribute__((always_inline));   // Turn LED on
   inline void       pinOff() const __attribute__((always_inline));  // Turn LED off
-};                                                                  // of class smoothLED
+};  // of class smoothLED                                           //
 #endif

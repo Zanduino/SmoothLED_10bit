@@ -25,6 +25,7 @@ Written by Arnd <Arnd@Zanduino.Com> at https://www.github.com/SV-Zanshin
 
 | Version| Date       | Developer  | Comments                                                      |
 | ------ | ---------- | ---------- | ------------------------------------------------------------- |
+| 1.0.0  | 2021-01-19 | SV-Zanshin | Updated set() call to use milliseconds                        |
 | 1.0.0  | 2021-01-17 | SV-Zanshin | Initial coding                                                |
 */
 
@@ -33,7 +34,7 @@ Written by Arnd <Arnd@Zanduino.Com> at https://www.github.com/SV-Zanshin
 #error This library and program is designed for Atmel ATMega processors
 #endif
 
-smoothLED Board;  //!< instanc of smoothLED pointing to the builtin LED
+smoothLED Board;  //!< instance of smoothLED pointing to the builtin LED
 
 void setup() {
   /*!
@@ -67,8 +68,8 @@ void setup() {
     delay(10);     // wait a bit
   }                // for-next manual dimming
   Serial.println("Test 2 - fading the LED using the library");
-  Board.set(1023);    // set full on
-  Board.set(0, 250);  // fade to 0 at a slow rate
+  Board.set(1023);     // set full on
+  Board.set(0, 5000);  // fade to 0 over 5000ms (5 seconds)
   Serial.println("Program continues, fade happens in the background");
 
   /* example loop - while this is running the onboard LED slowly fades away, independant of this. */
@@ -85,7 +86,7 @@ void loop() {
       @details  Main program for the Arduino IDE, it is an infinite loop and keeps on repeating
       @return   void
   */
-  Board.set(0);          // set off
-  Board.set(1023, 100);  // fade to 0 at a slow rate
+  Board.set(0);           // set off
+  Board.set(1023, 5000);  // fade to 0 at a slow rate
   delay(15000);
 }  // of method "loop()"

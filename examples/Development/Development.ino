@@ -25,22 +25,14 @@ void setup() {
   RED.begin(RED_PIN, INVERT_LED);
   BLUE.begin(BLUE_PIN, INVERT_LED);
 
-  Serial.print("SREG ");
-  Serial.println(SREG, BIN);
-  Serial.print("TIMSK0 ");
-  Serial.println(TIMSK0, BIN);
-  Serial.print("TCCR1A ");
-  Serial.println(TCCR1A, BIN);
-  Serial.print("TCCR1B ");
-  Serial.println(TCCR1B, BIN);
   GREEN.hertz(45);
 }
 
 // the loop function runs over and over again until power down or reset
 void loop() {
   GREEN.set(0);
-  GREEN.set(1023, 200);
-  delay(30000);
+  GREEN.set(1023, 3000);
+  delay(35000);
 
   Serial.println(F("Next..."));
   /*
