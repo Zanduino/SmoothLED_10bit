@@ -331,13 +331,13 @@ void smoothLED::set(const uint16_t &val, const uint16_t &speed) {
       *********************************************************************************************/
       uint32_t temp = (_currentLevel > _targetLevel) ? _currentLevel - _targetLevel
                                                      : _targetLevel - _currentLevel;
-      temp          = ((uint32_t)speed * 2 * 100) / temp;  // compute the delay factor
-      if (temp > UINT16_MAX) {                             // if the value is bigger than fits
-        temp = UINT16_MAX;                                 // clamp it to range,
-      } else if (temp < 101) {                             // and if it is less than minimum
-        temp = 100;                                        // then set it to minimum
-      }                                                    // if-then-else out of range
-      _changeDelays = static_cast<uint16_t>(temp);         // Set the value, knowing it is in range
+      temp = ((uint32_t)speed * 2 * 100) / temp;    // compute the delay factor, see comments above
+      if (temp > UINT16_MAX) {                      // if the value is bigger than fits
+        temp = UINT16_MAX;                          // clamp it to range,
+      } else if (temp < 101) {                      // and if it is less than minimum
+        temp = 100;                                 // then set it to minimum
+      }                                             // if-then-else out of range
+      _changeDelays = static_cast<uint16_t>(temp);  // Set the value, knowing it is in range
       _changeTicker = _changeDelays;  // and then set the ticker variable to that value
     }                                 // if-then-else immediate
     if (_flags & FLAG_PWM) {          // If PWM is needed, then
