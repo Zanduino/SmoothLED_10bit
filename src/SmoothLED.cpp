@@ -338,7 +338,7 @@ void smoothLED::set(const uint16_t &val, const uint16_t &speed) {
         temp = 100;                                        // then set it to minimum
       }                                                    // if-then-else out of range
       _changeDelays = static_cast<uint16_t>(temp);         // Set the value, knowing it is in range
-      _changeTicker = _changeDelays;  // and set the ticker variable to that value
+      _changeTicker = _changeDelays;  // and then set the ticker variable to that value
     }                                 // if-then-else immediate
     if (_flags & FLAG_PWM) {          // If PWM is needed, then
 #if defined(OCR1AL)
