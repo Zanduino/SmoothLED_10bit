@@ -90,7 +90,7 @@ $(document).ready(function(){initNavTree('classsmooth_l_e_d.html','');});
 </div><!--header-->
 <div class="contents">
 
-<p>Class to allow PWM pins to be used with 10-bit PWM regardless of which timer they are attached to.  
+<p>Class to allow any pins to be used with 10-bit PWM.  
  <a href="classsmooth_l_e_d.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -129,8 +129,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a43c22e86fe4d4f7f493dadb5f1f45a7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afced7dba38c2898cd1bb44bf465367b3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsmooth_l_e_d.html#afced7dba38c2898cd1bb44bf465367b3">hertz</a> (const uint8_t hertz) const</td></tr>
 <tr class="separator:afced7dba38c2898cd1bb44bf465367b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f1204bc2465387a5c3274ed7d11e5b9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsmooth_l_e_d.html#a4f1204bc2465387a5c3274ed7d11e5b9">set</a> (const uint16_t &amp;val, const uint8_t speed=0)</td></tr>
-<tr class="separator:a4f1204bc2465387a5c3274ed7d11e5b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10d68be70ccbe51ca7c7b8bd14d48473"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsmooth_l_e_d.html#a10d68be70ccbe51ca7c7b8bd14d48473">set</a> (const uint16_t &amp;val, const uint16_t &amp;speed=0)</td></tr>
+<tr class="separator:a10d68be70ccbe51ca7c7b8bd14d48473"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -140,7 +140,7 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:a614ad693ed59ea963488460cd494f817"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Class to allow PWM pins to be used with 10-bit PWM regardless of which timer they are attached to. </p>
+<div class="textblock"><p>Class to allow any pins to be used with 10-bit PWM. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a604cb27810470b2e0fa30a17d196af95"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a604cb27810470b2e0fa30a17d196af95">&#9670;&nbsp;</a></span>smoothLED()</h2>
@@ -410,7 +410,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>= Overload</p>
-<p>The "=" operator sets the LED value of _currentLevel, _targetLevel and _changeSpeed</p>
+<p>The "=" operator sets the LED values</p>
 
 </div>
 </div>
@@ -437,13 +437,13 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <p>Function to actually perform the PWM on all pins</p>
-<p>This function is the interrupt handler for TIMER1_COMPA and performs the PWM turning ON and OFF of all the pins defined in the instances of the class. It is called very often and therefore needs to be as compact as possible. If the LED is set to 30Hz then this ISR is call 30*1023 = 30690 times a second, or every 32.5 microseconds. At 16MHz the microprocessor only executes 16 instructions per microsecond so it is really important to minimize time spent here. This function iterates through all the instances of the <a class="el" href="classsmooth_l_e_d.html" title="Class to allow PWM pins to be used with 10-bit PWM regardless of which timer they are attached to...">smoothLED</a> class and sets each pin ON or OFF for the appropriate number of cycles.</p>
+<p>This function is the interrupt handler for TIMER1_COMPA and performs the PWM turning ON and OFF of all the pins defined in the instances of the class. It is called very often and therefore needs to be as compact as possible. If the LED is set to 30Hz then this ISR is call 30*1023 = 30690 times a second, or every 32.5 microseconds. At 16MHz the microprocessor only executes 16 instructions per microsecond so it is really important to minimize time spent here. This function iterates through all the instances of the <a class="el" href="classsmooth_l_e_d.html" title="Class to allow any pins to be used with 10-bit PWM. ">smoothLED</a> class and sets each pin ON or OFF for the appropriate number of cycles.</p>
 <p>&lt; loop counter 0-1023 for software PWM </p>
 
 </div>
 </div>
-<a id="a4f1204bc2465387a5c3274ed7d11e5b9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4f1204bc2465387a5c3274ed7d11e5b9">&#9670;&nbsp;</a></span>set()</h2>
+<a id="a10d68be70ccbe51ca7c7b8bd14d48473"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10d68be70ccbe51ca7c7b8bd14d48473">&#9670;&nbsp;</a></span>set()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -457,7 +457,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const uint8_t&#160;</td>
+          <td class="paramtype">const uint16_t &amp;&#160;</td>
           <td class="paramname"><em>speed</em> = <code>0</code>&#160;</td>
         </tr>
         <tr>
