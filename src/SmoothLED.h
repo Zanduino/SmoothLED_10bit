@@ -56,6 +56,8 @@ Written by Arnd <Arnd@Zanduino.Com> at https://www.github.com/SV-Zanshin
 | 1.0.0  | 2021-01-17 | SV-Zanshin | Added disabling interrupts when not needed & CIE-Mode disable |
 | 1.0.0  | 2021-01-15 | SV-Zanshin | Optimized instantiation and completed coding and testing      |
 | 1.0.0  | 2021-01-10 | SV-Zanshin | Created new library for the class                             |
+| ------ | ---------- | ---------- | ------------------------------------------------------------- |
+
 */
 
 #ifndef _smoothLED_h
