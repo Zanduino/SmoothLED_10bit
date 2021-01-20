@@ -33,7 +33,9 @@ const uint8_t RED_PIN{11};    //!< Red Pin number
 const uint8_t GREEN_PIN{10};  //!< Red Pin number
 const uint8_t BLUE_PIN{9};    //!< Red Pin number
 
-smoothLED red, green, blue;  //!< instance of smoothLED pointing to the 3 LED colors
+smoothLED red,  //!< instance of smoothLED pointing to red
+    green,      //!< instance of smoothLED pointing to green
+    blue;       //!< instance of smoothLED pointing to blue
 
 void setup() {
   /*!
