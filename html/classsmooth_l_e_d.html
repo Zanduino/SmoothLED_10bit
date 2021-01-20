@@ -438,7 +438,6 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Function to actually perform the PWM on all pins</p>
 <p>This function is the interrupt handler for TIMER1_COMPA and performs the PWM turning ON and OFF of all the pins defined in the instances of the class. It is called very often and therefore needs to be as compact as possible. If the LED is set to 30Hz then this ISR is call 30*1023 = 30690 times a second, or every 32.5 microseconds. At 16MHz the microprocessor only executes 16 instructions per microsecond so it is really important to minimize time spent here. This function iterates through all the instances of the <a class="el" href="classsmooth_l_e_d.html" title="Class to allow any Arduino pins to be used with 10-bit PWM. ">smoothLED</a> class and sets each pin ON or OFF for the appropriate number of cycles.</p>
-<p>&lt; loop counter 0-1023 for software PWM </p>
 
 </div>
 </div>
