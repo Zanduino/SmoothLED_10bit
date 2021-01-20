@@ -27,6 +27,11 @@ smoothLED *smoothLED::_firstLink{nullptr};  // static member declaration outside
 #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))  //!<  set bit macro
 #endif
 
+/***************************************************************************************************
+** The library uses TIMER1 and the TIMER1_COMPA interrupt for performing PWM. At the moment the   **
+** library has been written only for this timer and interrupt and the following #ifdef ensures    **
+** that the compile fails if TIMER1 does not exist or is not a 16-bit timer.                      **
+***************************************************************************************************/
 #if defined(OCR1AL)
 ISR(TIMER1_COMPA_vect) {
   /*!
@@ -35,6 +40,8 @@ ISR(TIMER1_COMPA_vect) {
   */
   smoothLED::pwmISR();
 }  // Call the ISR every millisecond
+#else
+#error smoothLED uses TIMER1 and OCR1AL for PWM. Unfortunately this is not defined for this microprocessor. Aborting compilation
 #endif
 ISR(TIMER0_COMPA_vect) {
   /*!
@@ -241,8 +248,6 @@ bool smoothLED::begin(const uint8_t pin, const bool invert) {
       cbi(TCCR1A, WGM11);  // Only WGM12 is set, the others are off. The
       sbi(TCCR1B, WGM12);  // interrupt is triggered and the counter is reset
       cbi(TCCR1B, WGM13);  // when the value in OCR1A is matched
-#else
-#error TIMER not yet defined for this microprocessor
 #endif
     }                                                                 // if-then first begin call
     if (invert) {                                                     // If the LED is inverted,
@@ -298,8 +303,6 @@ void smoothLED::hertz(const uint8_t hertz) const {
 #if defined(OCR1AL)
     OCR1A = static_cast<uint16_t>(
         (F_CPU / static_cast<unsigned long>(1023) / static_cast<unsigned long>(hertz)) - 1);
-#else
-#error Undefined 16-bit register
 #endif
   }  // atomic block for interrupts
 }  // of function "hertz()"
@@ -357,8 +360,6 @@ void smoothLED::set(const uint16_t &val, const uint16_t &speed) {
     if (_flags & FLAG_PWM) {          // If PWM is needed, then
 #if defined(OCR1AL)
       TIMSK1 |= _BV(OCIE1A);  // Set interrupt on Match A for TIMER1
-#else
-#error TIMER not yet defined for this microprocessor
 #endif
     }  // if-then PWM needed
   }    // of atomic block

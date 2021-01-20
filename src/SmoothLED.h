@@ -154,7 +154,7 @@ const bool NO_INVERT_LED{false};  //!< Default. When value is 0 it means off
 class smoothLED {
   /*!
     @class   smoothLED
-    @brief   Class to allow any pins to be used with 10-bit PWM
+    @brief   Class to allow any Arduino pins to be used with 10-bit PWM
   */
  public:                                          // Declare all publicly visible members
   smoothLED();                                    // Class constructor
