@@ -76,9 +76,9 @@ void setup() {
   red.set(512);  // Set red to 512/1023 PWM brightness
   green = red;   // Set green identical to red
   blue  = red;   // Set blue identical to red
-  Serial.print(F("Wait 5 seconds"));
+  Serial.println(F("Wait 5 seconds"));
   delay(5000);
-  Serial.print(F("Fade green & blue off while raising red to full"));
+  Serial.println(F("Fade green & blue off while raising red to full"));
   green.set(0, 5000);
   blue.set(0, 5000);
   red.set(1023, 5000);
@@ -86,7 +86,7 @@ void setup() {
   red.set(512);  // Set red to 512/1023 PWM brightness
   green = red;   // Set green identical to red
   blue  = red;   // Set blue identical to red
-  Serial.print(F("Fade red & blue off while raising red to full"));
+  Serial.println(F("Fade red & blue off while raising red to full"));
   green.set(1023, 5000);
   blue.set(0, 5000);
   red.set(0, 5000);
@@ -94,7 +94,7 @@ void setup() {
   red.set(512);  // Set red to 512/1023 PWM brightness
   green = red;   // Set green identical to red
   blue  = red;   // Set blue identical to red
-  Serial.print(F("Fade red & green off while raising blue to full"));
+  Serial.println(F("Fade red & green off while raising blue to full"));
   green.set(0, 5000);
   blue.set(1023, 5000);
   red.set(0, 5000);
