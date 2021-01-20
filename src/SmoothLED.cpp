@@ -13,6 +13,7 @@ const uint8_t  FLAG_INVERTED{1};  //!< Bit mask for inverted LED flag
 const uint8_t  FLAG_PWM{2};       //!< Bit mask for LED is not 0 or 1023
 
 smoothLED *smoothLED::_firstLink{nullptr};  // static member declaration outside of class for init
+uint16_t   smoothLED::_counterPWM{0};       // loop counter 0-1023 for software PWM
 
 /***************************************************************************************************
 ** Not all of these macros are defined on all platforms, so redefine them here just in case       **
@@ -372,6 +373,7 @@ void smoothLED::set(const uint16_t &val, const uint16_t &speed) {
       _changeTicker = _changeDelays;  // and then set the ticker variable to that value
     }                                 // if-then-else immediate
     if (_flags & FLAG_PWM) {          // If PWM is needed, then
+      _counterPWM = 0;                // start counter at beginning
 #if defined(OCR1AL)
       TIMSK1 |= _BV(OCIE1A);  // Set interrupt on Match A for TIMER1
 #endif
@@ -390,8 +392,7 @@ void smoothLED::pwmISR() {
              This function iterates through all the instances of the smoothLED class and sets each
              pin ON or OFF for the appropriate number of cycles.
   */
-  static uint16_t _counterPWM{0};           //!< loop counter 0-1023 for software PWM
-  smoothLED *     p = _firstLink;           // Set ptr to start of linked list of class instances
+  smoothLED *p = _firstLink;                // Set ptr to start of linked list of class instances
   while (p != nullptr) {                    // Loop through linked list of all class instances
     if (p->_portRegister != nullptr) {      // Skip processing if the pin is not initialized
       if (p->_currentCIE == _counterPWM) {  // If we've reached the PWM threshold

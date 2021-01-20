@@ -52,6 +52,8 @@ Written by Arnd <Arnd@Zanduino.Com> at https://www.github.com/SV-Zanshin
 
 | Version| Date       | Developer  | Comments                                                      |
 | ------ | ---------- | ---------- | ------------------------------------------------------------- |
+| 1.0.2  | 2021-01-20 | SV-Zanshin | Reset _counterPWM when turning PWM on to remove quick flash   |
+| 1.0.2  | 2021-01-19 | SV-Zanshin | Issue #1 - check for valid Hertz parameter setting            |
 | 1.0.0  | 2021-01-18 | SV-Zanshin | Fixed issues with initializing timer causing spurious hangs   |
 | 1.0.0  | 2021-01-17 | SV-Zanshin | Added disabling interrupts when not needed & CIE-Mode disable |
 | 1.0.0  | 2021-01-15 | SV-Zanshin | Optimized instantiation and completed coding and testing      |
@@ -179,6 +181,7 @@ class smoothLED {
                   const uint16_t& speed = 0);     // optional change speed in milliseconds
  private:                                         // declare the private class members
   static smoothLED* _firstLink;                   //!< Static pointer to first instance in list
+  static uint16_t   _counterPWM;                  //!< loop counter 0-1023 for software PWM
   volatile uint8_t* _portRegister{nullptr};       //!< Pointer to the actual PORT{n} Register
   smoothLED*        _nextLink{nullptr};           //!< Pointer to the next instance in  list
   uint8_t           _registerBitMask{0};          //!< bit mask for the bit used in PORT{n}
