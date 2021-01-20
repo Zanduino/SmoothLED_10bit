@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['loop',['loop',['../_builtin___l_e_d___demo_8ino.html#afe461d27b9c48d5921c00d521181f12f',1,'Builtin_LED_Demo.ino']]]
+  ['kcie',['kcie',['../_smooth_l_e_d_8h.html#aaa2e2cdda8f9aef9851c7a50310348fc',1,'SmoothLED.h']]]
 ];
