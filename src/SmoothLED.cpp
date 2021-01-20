@@ -123,55 +123,69 @@ smoothLED &smoothLED::operator++() {
     @brief   ++ Overload
     @details The "++" pre-increment operator increments the target LED level
   */
-  ++_targetLevel &= MAX10BIT;  // increment target and clamp to range
-  return *this;
+  ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {  // disable interrupts while changing 16 bit value
+    ++_targetLevel &= MAX10BIT;        // increment target and clamp to range
+  }                                    // of atomic block
+  return *this;                        // Return new class value
 }
 smoothLED &smoothLED::operator--() {
   /*!
     @brief   -- Overload
     @details The "--" pre-decrement operator increments the target LED level
   */
-  --_targetLevel &= MAX10BIT;  // decrement target and clamp to range
-  return *this;
+  ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {  // disable interrupts while changing 16 bit value
+    --_targetLevel &= MAX10BIT;        // decrement target and clamp to range
+  }                                    // of atomic block
+  return *this;                        // Return new class value
 }
 smoothLED &smoothLED::operator+(const int16_t &value) {
   /*!
     @brief   + Overload
     @details The "+" operator increments the target LED level by the specified value
   */
-  this->_targetLevel = (this->_targetLevel + value) & MAX10BIT;  // increment target and clamp
-  return *this;
+  ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {  // disable interrupts while changing 16 bit value
+    this->_targetLevel = (this->_targetLevel + value) & MAX10BIT;  // increment target and clamp
+  }                                                                // of atomic block
+  return *this;                                                    // Return new class value
 }
 smoothLED &smoothLED::operator-(const int16_t &value) {
   /*!
     @brief   - Overload
     @details The "-" operator decrements the target LED level by the specified value
   */
-  this->_targetLevel = (this->_targetLevel - value) & MAX10BIT;  // decrement target and clamp
-  return *this;
+  ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {  // disable interrupts while changing 16 bit value
+    this->_targetLevel = (this->_targetLevel - value) & MAX10BIT;  // decrement target and clamp
+  }                                                                // of atomic block
+  return *this;                                                    // Return new class value
 }
 smoothLED &smoothLED::operator+=(const int16_t &value) {
   /*!
   @brief   += Overload
   @details The "+=" operator increments the target LED level by the specified value
 */
-  this->_targetLevel = (this->_targetLevel + value) & MAX10BIT;  // increment target and clamp
-  return *this;
+  ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {  // disable interrupts while changing 16 bit value
+    this->_targetLevel = (this->_targetLevel + value) & MAX10BIT;  // increment target and clamp
+  }                                                                // of atomic block
+  return *this;                                                    // Return new class value
 }
 smoothLED &smoothLED::operator-=(const int16_t &value) {
   /*!
   @brief   - Overload
   @details The "-" operator decrements the target LED level by the specified value
 */
-  this->_targetLevel = (this->_targetLevel - value) & MAX10BIT;  // decrement target and clamp
-  return *this;
+  ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {  // disable interrupts while changing 16 bit value
+    this->_targetLevel = (this->_targetLevel - value) & MAX10BIT;  // decrement target and clamp
+  }                                                                // of atomic block
+  return *this;                                                    // Return new class value
 }
 smoothLED &smoothLED::operator=(const smoothLED &value) {
   /*!
   @brief   = Overload
   @details The "=" operator sets the LED values
 */
+  this->_flags        = value._flags;
   this->_currentLevel = value._currentLevel;
+  this->_currentCIE   = value._currentCIE;
   this->_targetLevel  = value._targetLevel;
   this->_changeDelays = value._changeDelays;
   this->_changeTicker = value._changeTicker;
