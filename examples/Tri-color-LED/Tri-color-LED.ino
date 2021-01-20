@@ -1,4 +1,4 @@
-/*! @file Tri-color-LED_Demo.ino
+/*! @file Tri-color-LED.ino
 
 @section Tri-color-LED_intro_section Description
 
@@ -17,7 +17,7 @@ received a copy of the GNU General Public License along with this program.  If n
 
 Written by Arnd <Arnd@Zanduino.Com> at https://www.github.com/SV-Zanshin
 
-@section Builtin_LED_Demoversions Changelog
+@section Tri-color-LED_Demoversions Changelog
 
 | Version| Date       | Developer  | Comments                                                      |
 | ------ | ---------- | ---------- | ------------------------------------------------------------- |
