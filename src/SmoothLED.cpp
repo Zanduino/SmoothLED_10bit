@@ -296,8 +296,8 @@ void smoothLED::hertz(const uint8_t hertz) const {
            value specified, that is accounted for in the formula.  While rate down to 1Hz can be
            given, anything below 30 (depending on the LED and brightness) causes visible flickering
            and should be avoided. The maximum viable Hertz rate depends upon how many LEDs have been
-           defined. The usage rate approximates 120Hz - (#LEDs*10). So with 6 LEDs the rate should
-           not exceed 70Hz
+           defined. The usage rate approximates 120Hz - (No. of LEDs*10). So with 6 LEDs the rate
+           should not exceed 70Hz
 @param[in] hertz    Unsigned integer Hertz setting for LED PWM
 */
   smoothLED *p = _firstLink;            // Set ptr to start of linked list of class instances
