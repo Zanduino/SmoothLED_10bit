@@ -295,14 +295,28 @@ void smoothLED::hertz(const uint8_t hertz) const {
 @details   The function sets the PWM frequency. The actual interrupt rate is 1023 times the Hertz
            value specified, that is accounted for in the formula.  While rate down to 1Hz can be
            given, anything below 30 (depending on the LED and brightness) causes visible flickering
-           and should be avoided. Any number beyond XXXX is ignored, as the interrupt rate would be
-           so high that there are no CPU cycles left to process the main program.
+           and should be avoided. The maximum viable Hertz rate depends upon how many LEDs have been
+           defined. The usage rate approximates 120Hz - (#LEDs*10). So with 6 LEDs the rate should
+           not exceed 70Hz
 @param[in] hertz    Unsigned integer Hertz setting for LED PWM
 */
+  smoothLED *p = _firstLink;            // Set ptr to start of linked list of class instances
+  uint8_t    workVar{0};                // local counter
+  while (p != nullptr) {                // Loop through linked list of all class instances
+    if (p->_portRegister != nullptr) {  // Skip processing if the pin is not initialized
+      ++workVar;                        // increment counter
+    }                                   // if-then-else turn off LED
+    p = p->_nextLink;                   // go to next class instance
+  }                                     // of while loop to traverse  list
+  workVar = (120 - (workVar * 10));     // compute max Hz
+  if (hertz < workVar && hertz != 0) {  // if in range
+    workVar = hertz;                    // set to parameter
+  }                                     // if-then in range
+
   ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
 #if defined(OCR1AL)
     OCR1A = static_cast<uint16_t>(
-        (F_CPU / static_cast<unsigned long>(1023) / static_cast<unsigned long>(hertz)) - 1);
+        (F_CPU / static_cast<unsigned long>(1023) / static_cast<unsigned long>(workVar)) - 1);
 #endif
   }  // atomic block for interrupts
 }  // of function "hertz()"
