@@ -72,6 +72,14 @@ void setup() {
 
   Serial.println(F("Setting refresh rate to 45 hertz."));
   red.hertz(45);
+}  // of method "setup()"
+
+void loop() {
+  /*!
+      @brief    Arduino method for the main program loop
+      @details  Main program for the Arduino IDE, it is an infinite loop and keeps on repeating
+      @return   void
+  */
   Serial.println(F("Setting all 3 colors to middle value"));
   red.set(512);  // Set red to 512/1023 PWM brightness
   green = red;   // Set green identical to red
@@ -86,7 +94,7 @@ void setup() {
   red.set(512);  // Set red to 512/1023 PWM brightness
   green = red;   // Set green identical to red
   blue  = red;   // Set blue identical to red
-  Serial.println(F("Fade red & blue off while raising red to full"));
+  Serial.println(F("Fade red & blue off while raising green to full"));
   green.set(1023, 5000);
   blue.set(0, 5000);
   red.set(0, 5000);
@@ -99,16 +107,4 @@ void setup() {
   blue.set(1023, 5000);
   red.set(0, 5000);
   delay(10000);
-
-  while (1)
-    ;
-
-}  // of method "setup()"
-
-void loop() {
-  /*!
-      @brief    Arduino method for the main program loop
-      @details  Main program for the Arduino IDE, it is an infinite loop and keeps on repeating
-      @return   void
-  */
 }  // of method "loop()"
