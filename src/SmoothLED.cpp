@@ -356,18 +356,18 @@ void smoothLED::set(const uint16_t &val, const uint16_t &speed) {
       ** The interrupt fires 2000 times per second. If the fading/brightening happens at the      **
       ** maximum range (from 0 to 1023) at the fastest speed of 1 level per call, then we have a  **
       ** top speed of 500ms. Compute the number of delay cycles into "_changeDelays" multiplied by**
-      ** 100, i.e. for the example above: speed 500 * 2 * 100 / delta = 97 (rounded to integer).  **
+      ** 128, i.e. for the example above: speed 500 * 2 * 128 / delta = 97 (rounded to integer).  **
       ** The "_changeTicker" is set to the this value as well. In the fade handler the            **
-      ** "changeTicker" is decremented by 100 each iteration until it is equal to or less than 0, **
+      ** "changeTicker" is decremented by 128 each iteration until it is equal to or less than 0, **
       ** whereupon the brightness value is changed and the "_changeTicker" is reset.              **
       *********************************************************************************************/
       uint32_t temp = (_currentLevel > _targetLevel) ? _currentLevel - _targetLevel
                                                      : _targetLevel - _currentLevel;
-      temp = ((uint32_t)speed * 2 * 100) / temp;    // compute the delay factor, see comments above
+      temp = ((uint32_t)speed << 8) / temp;         // compute the delay factor, see comments above
       if (temp > UINT16_MAX) {                      // if the value is bigger than fits
         temp = UINT16_MAX;                          // clamp it to range,
-      } else if (temp < 101) {                      // and if it is less than minimum
-        temp = 100;                                 // then set it to minimum
+      } else if (temp < 128) {                      // and if it is less than minimum
+        temp = 128;                                 // then set it to minimum
       }                                             // if-then-else out of range
       _changeDelays = static_cast<uint16_t>(temp);  // Set the value, knowing it is in range
       _changeTicker = _changeDelays;  // and then set the ticker variable to that value
@@ -440,7 +440,7 @@ void smoothLED::faderISR() {
         /*******************************************************************************************
         ** Perform the dynamic PWM change at the appropriate speed                                **
         *******************************************************************************************/
-        p->_changeTicker -= 100;
+        p->_changeTicker -= 128;
         if (p->_changeTicker <= 0) {
           p->_changeTicker += p->_changeDelays;      // add delay factor to ticker
           if (p->_currentLevel > p->_targetLevel) {  // choose direction

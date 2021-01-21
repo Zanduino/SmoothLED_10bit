@@ -16,12 +16,13 @@ using the first 16-bit timer on the Atmel ATMega processor it is compiled on.
 Since the PWM is done in software, it "steals" CPU cycles from the main sketch and the more LEDs
 defined in the library the more CPU cycles it consumes.
 
+User documentation is located at https://github.com/Zanduino/SmoothLED/wiki
 
 @section Smooth_LED_doxygen Doxyygen configuration
 This library is built with the standard "Doxyfile", which is located at
 https://github.com/Zanduino/Common/blob/main/Doxygen. As described on that page, there are only 5
 environment variables used, and these are set in the project's actions file, located at
-https://github.com/Zanduino/Smooth_LED/blob/master/.github/workflows/ci-doxygen.yml
+https://github.com/Zanduino/SmoothLED/blob/master/.github/workflows/ci-doxygen.yml
 Edit this file and set the 5 variables: PRETTYNAME, PROJECT_NAME, PROJECT_NUMBER, PROJECT_BRIEF and
 PROJECT_LOGO so that these values are used in the doxygen documentation. The local copy of the
 doxyfile should be in the project's root directory in order to do local doxygen testing, but the
@@ -52,6 +53,7 @@ Written by Arnd <Arnd@Zanduino.Com> at https://www.github.com/SV-Zanshin
 
 | Version| Date       | Developer  | Comments                                                      |
 | ------ | ---------- | ---------- | ------------------------------------------------------------- |
+| 1.0.2  | 2021-01-21 | SV-Zanshin | Issue #2 - use base-2 rather than base-10 for fading          |
 | 1.0.2  | 2021-01-20 | SV-Zanshin | Reset _counterPWM when turning PWM on to remove quick flash   |
 | 1.0.2  | 2021-01-19 | SV-Zanshin | Issue #1 - check for valid Hertz parameter setting            |
 | 1.0.0  | 2021-01-18 | SV-Zanshin | Fixed issues with initializing timer causing spurious hangs   |
