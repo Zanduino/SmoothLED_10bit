@@ -1,6 +1,6 @@
-# SmoothLED library Header and Source files<br>
+# Zanduino SmoothLED Library 10-bit - c++ header and source files<br>
 
-This directory contains the two files that define the SmoothLED 10-bit PWM *Arduino* library.
+This directory contains the two files that define the Zanduino SmoothLED Library 10-bit library for *Arduino*.
 
 The "SmoothLED.h" is the library header file, and the program code is contained in the "SmoothLED.cpp" file.
 
